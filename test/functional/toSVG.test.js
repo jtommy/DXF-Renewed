@@ -40,6 +40,7 @@ const names = [
   'array-rotated',
   'arrayed-holes',
   'squircle2',
+  'lwpolyline_flip_test',
 ]
 const dxfs = names.map((name) => require(`../resources/${name}.dxf`).default)
 const svgs = dxfs.map((contents) => new Helper(contents).toSVG())
