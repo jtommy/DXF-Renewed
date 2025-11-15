@@ -15,10 +15,8 @@ import type {
   DimensionEntity,
   EllipseEntity,
   Entity,
-  LineEntity,
   MTextEntity,
   ParsedDXF,
-  PolylineEntity,
   SplineEntity,
   TextEntity,
 } from './types'
@@ -46,7 +44,7 @@ const addFlipXIfApplicable = (
  * Create a <path /> element. Interpolates curved entities.
  */
 const polyline = (entity: Entity): BoundsAndElement => {
-  const vertices = entityToPolyline(entity as LineEntity | PolylineEntity | CircleEntity | EllipseEntity | ArcEntity | SplineEntity)
+  const vertices = entityToPolyline(entity as any)
   const bbox = vertices.reduce(
     (acc, [x, y]) => acc.expandByPoint({ x, y }),
     new Box2(),
@@ -69,7 +67,7 @@ const polyline = (entity: Entity): BoundsAndElement => {
  * lwpolyline is the same as polyline but addFlipXIfApplicable does apply
  */
 const lwpolyline = (entity: Entity): BoundsAndElement => {
-  const vertices = entityToPolyline(entity as PolylineEntity)
+  const vertices = entityToPolyline(entity as any)
   const bbox0 = vertices.reduce(
     (acc, [x, y]) => acc.expandByPoint({ x, y }),
     new Box2(),

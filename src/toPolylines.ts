@@ -32,7 +32,7 @@ export default function toPolylines(parsed: ParsedDXF): PolylineResult {
     return {
       rgb: colors[colorNumber],
       layer: layerTable,
-      vertices: applyTransforms(entityToPolyline(entity), entity.transforms),
+      vertices: applyTransforms(entityToPolyline(entity as any), entity.transforms),
     }
   })
 

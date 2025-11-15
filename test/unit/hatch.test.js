@@ -1,6 +1,6 @@
-import { getResourcePath } from './test-helpers.js'
-import fs from 'fs'
 import expectModule from 'expect'
+import fs from 'fs'
+import { getResourcePath } from './test-helpers.js'
 const expect = expectModule.expect || expectModule.default
 
 import { parseString } from '../../src'

@@ -1,6 +1,7 @@
 // DXF parsing and structure types
 
 import type { Entity } from './entity'
+import type { ParsedObjects } from './tables'
 
 export interface LayerTable {
   name: string
@@ -35,10 +36,7 @@ export interface ParsedDXF {
   tables: Tables
   blocks: BlockArray
   entities: Entity[]
-  objects?: {
-    layouts?: unknown[]
-    [key: string]: unknown
-  }
+  objects?: ParsedObjects
 }
 
 export type DXFTuple = [number, string | number]
