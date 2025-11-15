@@ -1,8 +1,9 @@
+import type { DXFTuple } from '../../types/dxf'
+
 import common from './common'
 
 export const TYPE = 'TEXT'
 
-type Tuple = [number, string | number]
 
 interface SimpleCodes {
   [key: number]: string
@@ -50,7 +51,7 @@ const simpleCodes: SimpleCodes = {
 
 // const EXCEPTION_STRINGS = ['\\A1;', '%%u']
 
-export const process = (tuples: Tuple[]): TextEntity => {
+export const process = (tuples: DXFTuple[]): TextEntity => {
   return tuples.reduce(
     (entity, tuple) => {
       const type = tuple[0]

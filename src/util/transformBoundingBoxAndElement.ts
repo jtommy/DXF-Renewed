@@ -1,13 +1,5 @@
 import { Box2 } from 'vecks'
-
-interface Transform {
-  x?: number
-  y?: number
-  scaleX?: number
-  scaleY?: number
-  rotation?: number
-  extrusionZ?: number
-}
+import type { Transform } from '../types/common'
 
 interface TransformResult {
   bbox: Box2

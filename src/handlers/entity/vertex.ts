@@ -1,8 +1,9 @@
+import type { DXFTuple } from '../../types/dxf'
+
 import type { Vertex } from '../../types'
 
 export const TYPE = 'VERTEX'
 
-type DXFTuple = [number, string | number]
 
 const ensureFaces = (entity: Vertex): void => {
   entity.faces = entity.faces || []

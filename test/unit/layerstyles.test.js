@@ -1,10 +1,11 @@
+import { getResourcePath } from './test-helpers.js'
 import fs from 'fs'
-import { join } from 'path'
-import expect from 'expect'
+import expectModule from 'expect'
+const expect = expectModule.expect || expectModule.default
 
 import { parseString } from '../../src'
 const dxfContents = fs.readFileSync(
-  join(__dirname, '/../resources/Ceco.NET-Architecture-Tm-53.dxf'),
+  getResourcePath(import.meta.url, 'Ceco.NET-Architecture-Tm-53.dxf'),
   'utf-8',
 )
 

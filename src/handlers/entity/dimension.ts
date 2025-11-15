@@ -1,8 +1,9 @@
+import type { DXFTuple } from '../../types/dxf'
+
 import common from './common'
 
 export const TYPE = 'DIMENSION'
 
-type Tuple = [number, string | number]
 
 interface Point3D {
   x: number
@@ -37,7 +38,7 @@ interface BitCombinationsResult {
   userDefinedLocation: boolean
 }
 
-export const process = (tuples: Tuple[]): DimensionEntity => {
+export const process = (tuples: DXFTuple[]): DimensionEntity => {
   return tuples.reduce(
     (entity, tuple) => {
       const type = tuple[0]

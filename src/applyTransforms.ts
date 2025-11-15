@@ -6,16 +6,9 @@
  * @returns the transformed polyline
  */
 
-type Point = [number, number]
+import type { PointTuple, Transform } from './types'
 
-interface Transform {
-  x?: number
-  y?: number
-  scaleX?: number
-  scaleY?: number
-  rotation?: number
-  extrusionZ?: number
-}
+type Point = PointTuple
 
 export default function applyTransforms(
   polyline: Point[],

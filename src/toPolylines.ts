@@ -3,18 +3,11 @@ import { Box2 } from 'vecks'
 import applyTransforms from './applyTransforms'
 import denormalise from './denormalise'
 import entityToPolyline from './entityToPolyline'
-import colors, { type ColorRGB } from './util/colors'
+import colors from './util/colors'
 import logger from './util/logger'
 
-import type { Entity, LayerTable, ParsedDXF } from './types'
-
-type Point = [number, number]
-
-interface Polyline {
-  rgb: ColorRGB
-  layer: LayerTable | undefined
-  vertices: Point[]
-}
+import type { Entity, ParsedDXF } from './types'
+import type { Polyline } from './types/polylines'
 
 interface PolylineResult {
   bbox: Box2

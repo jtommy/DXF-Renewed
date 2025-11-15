@@ -1,8 +1,9 @@
+import type { DXFTuple } from '../../types/dxf'
+
 import common from './common'
 
 export const TYPE = 'LINE'
 
-type Tuple = [number, string | number]
 
 interface Point {
   x?: number
@@ -18,7 +19,7 @@ interface LineEntity {
   [key: string]: unknown
 }
 
-export const process = (tuples: Tuple[]): LineEntity => {
+export const process = (tuples: DXFTuple[]): LineEntity => {
   return tuples.reduce(
     (entity, tuple) => {
       const type = tuple[0]

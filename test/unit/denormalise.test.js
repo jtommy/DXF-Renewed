@@ -1,13 +1,14 @@
+import { getResourcePath } from './test-helpers.js'
 import fs from 'fs'
-import { join } from 'path'
-import expect from 'expect'
+import expectModule from 'expect'
+const expect = expectModule.expect || expectModule.default
 
 import { parseString, denormalise } from '../../src'
 
 describe('Denormalise', () => {
   it('top-level entities', () => {
     const contents = fs.readFileSync(
-      join(__dirname, '../resources/lines.dxf'),
+      getResourcePath(import.meta.url, 'lines.dxf'),
       'utf-8',
     )
     const parsed = parseString(contents)
@@ -17,7 +18,7 @@ describe('Denormalise', () => {
 
   it('entities from inserted blocks', () => {
     const contents = fs.readFileSync(
-      join(__dirname, '../resources/blocks1.dxf'),
+      getResourcePath(import.meta.url, 'blocks1.dxf'),
       'utf-8',
     )
     const parsed = parseString(contents)
@@ -27,7 +28,7 @@ describe('Denormalise', () => {
 
   it('for blocks that contain inserts', () => {
     const contents = fs.readFileSync(
-      join(__dirname, '../resources/blocks2.dxf'),
+      getResourcePath(import.meta.url, 'blocks2.dxf'),
       'utf-8',
     )
     const parsed = parseString(contents)
@@ -41,7 +42,7 @@ describe('Denormalise', () => {
 
   it('inserts with rectangular array of blocks', () => {
     const contents = fs.readFileSync(
-      join(__dirname, '../resources/arrayed-holes.dxf'),
+      getResourcePath(import.meta.url, 'arrayed-holes.dxf'),
       'utf-8',
     )
     const parsed = parseString(contents)
@@ -53,7 +54,7 @@ describe('Denormalise', () => {
 
   it('rectangular blocks rotate correctly', () => {
     const contents = fs.readFileSync(
-      join(__dirname, '../resources/array-rotated.dxf'),
+      getResourcePath(import.meta.url, 'array-rotated.dxf'),
       'utf-8',
     )
     const parsed = parseString(contents)

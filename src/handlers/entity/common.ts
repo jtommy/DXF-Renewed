@@ -1,18 +1,5 @@
-interface CommonEntityProperties {
-  handle?: string
-  lineTypeName?: string
-  layer?: string
-  lineTypeScale?: number
-  visible?: boolean
-  colorNumber?: number
-  paperSpace?: number
-  viewportOn?: number
-  viewport?: number
-  extrusionX?: number
-  extrusionY?: number
-  extrusionZ?: number
-  layout?: string
-}
+import type { DXFTuple } from '../../types/dxf'
+import type { CommonEntityProperties } from '../../types/handler-internal'
 
 export default function parseCommonEntityProperties(
   type: number,

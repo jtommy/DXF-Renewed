@@ -1,6 +1,7 @@
+import type { DXFTuple } from '../types/dxf'
+
 import entitiesHandler from './entities'
 
-type DXFTuple = [number, string | number]
 
 export default (tuples: DXFTuple[]): any[] => {
   let state

@@ -1,20 +1,10 @@
 import colors from './util/colors'
 import logger from './util/logger'
 
-import type { Entity } from './types'
-import type { ColorRGB } from './util/colors'
-
-interface Layer {
-  colorNumber?: number
-  [key: string]: unknown
-}
-
-interface LayerTable {
-  [layerName: string]: Layer
-}
+import type { Entity, ColorRGB, LayerTable } from './types'
 
 export default function getRGBForEntity(
-  layers: LayerTable,
+  layers: { [layerName: string]: LayerTable },
   entity: Entity,
 ): ColorRGB {
   const layerTable = layers[entity.layer ?? '0']

@@ -1,14 +1,5 @@
 import insertKnot from './insertKnot'
-
-interface Point {
-  x: number
-  y: number
-}
-
-interface BezierResult {
-  controlPoints: Point[]
-  knots: number[]
-}
+import type { UtilPoint, BezierResult } from '../types/util-types'
 
 /**
  * For a pinned spline, the knots have to be repeated k times
@@ -65,7 +56,7 @@ export const computeInsertions = (k: number, knots: number[]): number[] => {
 
 export default function toPiecewiseBezier(
   k: number,
-  controlPoints: Point[],
+  controlPoints: UtilPoint[],
   knots: number[]
 ): BezierResult {
   checkPinned(k, knots)

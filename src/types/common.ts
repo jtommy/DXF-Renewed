@@ -1,5 +1,8 @@
 // Common geometric types
 
+/** 2D Point as tuple [x, y] */
+export type PointTuple = [number, number]
+
 export interface Point2D {
   x: number
   y: number

@@ -1,6 +1,7 @@
+import type { DXFTuple } from '../types/dxf'
+
 import logger from '../util/logger'
 
-type DXFTuple = [number, string | number]
 
 const ltypeHandler = (tuples: DXFTuple[]): any => {
   let element = null

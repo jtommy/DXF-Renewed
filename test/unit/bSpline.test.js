@@ -3,7 +3,8 @@
  * https://github.com/thibauts/b-spline/blob/master/test/index.js
  *
  */
-import expect from 'expect'
+import expectModule from 'expect'
+const expect = expectModule.expect || expectModule.default
 
 import interpolate from '../../src/util/bSpline'
 

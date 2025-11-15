@@ -1,11 +1,11 @@
 import fs from 'fs'
-import { join } from 'path'
+import { getResourcePath } from './test-helpers.js'
 
-import { parseString, denormalise, toSVG } from '../../src'
+import { denormalise, parseString, toSVG } from '../../src'
 import entityToPolyline from '../../src/entityToPolyline'
 
 const readContents = (filename) => {
-  return fs.readFileSync(join(__dirname, '/../resources/', filename), 'utf-8')
+  return fs.readFileSync(getResourcePath(import.meta.url, filename), 'utf-8')
 }
 
 describe("Reference files don't generate errors", function () {

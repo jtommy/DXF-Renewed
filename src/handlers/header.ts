@@ -1,4 +1,5 @@
-type DXFTuple = [number, string | number]
+import type { DXFTuple } from '../types/dxf'
+
 
 export default (tuples: DXFTuple[]): any => {
   let state

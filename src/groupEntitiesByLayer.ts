@@ -1,8 +1,4 @@
-import type { Entity } from './types'
-
-interface LayerGroups {
-  [layer: string]: Entity[]
-}
+import type { Entity, LayerGroups } from './types'
 
 export default function groupEntitiesByLayer(
   entities: Entity[],

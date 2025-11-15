@@ -1,16 +1,17 @@
+import { getResourcePath } from './test-helpers.js'
 import fs from 'fs'
-import { join } from 'path'
-import expect from 'expect'
+import expectModule from 'expect'
+const expect = expectModule.expect || expectModule.default
 import { Box2 } from 'vecks'
 
 import { parseString, toPolylines } from '../../src'
 const dxfSquareAndCircle = fs.readFileSync(
-  join(__dirname, '/../resources/squareandcircle.dxf'),
+  getResourcePath(import.meta.url, 'squareandcircle.dxf'),
   'utf-8',
 )
 
 const dxfPolyfaceMesh = fs.readFileSync(
-  join(__dirname, '/../resources/polyfacemesh.dxf'),
+  getResourcePath(import.meta.url, 'polyfacemesh.dxf'),
   'utf-8',
 )
 

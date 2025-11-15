@@ -1,16 +1,17 @@
+import { getResourcePath } from './test-helpers.js'
 import fs from 'fs'
-import { join } from 'path'
-import expect from 'expect'
+import expectModule from 'expect'
+const expect = expectModule.expect || expectModule.default
 
 import { parseString } from '../../src'
 const dxfContents = fs.readFileSync(
-  join(__dirname, '/../resources/splines.dxf'),
+  getResourcePath(import.meta.url, 'splines.dxf'),
   'utf-8',
 )
 
 // A spline containing control point weights
 const dxfSquircle = fs.readFileSync(
-  join(__dirname, '/../resources/squircle2.dxf'),
+  getResourcePath(import.meta.url, 'squircle2.dxf'),
   'utf-8',
 )
 

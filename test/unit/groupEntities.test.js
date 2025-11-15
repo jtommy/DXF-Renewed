@@ -1,13 +1,14 @@
+import { getResourcePath } from './test-helpers.js'
 import fs from 'fs'
-import { join } from 'path'
-import expect from 'expect'
+import expectModule from 'expect'
+const expect = expectModule.expect || expectModule.default
 
 import { parseString, denormalise, groupEntitiesByLayer } from '../../src'
 
 describe('Group entities', () => {
   it('by layer', () => {
     const parsed = parseString(
-      fs.readFileSync(join(__dirname, '../resources/floorplan.dxf'), 'utf-8'),
+      fs.readFileSync(getResourcePath(import.meta.url, 'floorplan.dxf'), 'utf-8'),
     )
     const entities = denormalise(parsed)
     const byLayer = groupEntitiesByLayer(entities)

@@ -1,7 +1,8 @@
+import type { DXFTuple } from '../../types/dxf'
+
 import type { Point3D } from '../../types'
 import common from './common'
 
-type DXFTuple = [number, string | number]
 
 interface SolidEntity {
   type: string

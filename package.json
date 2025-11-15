@@ -2,7 +2,17 @@
   "name": "dxf",
   "version": "5.3.1",
   "description": "DXF parser for node/browser",
+  "type": "module",
   "main": "lib/index.js",
+  "module": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.js",
+      "require": "./lib/index.cjs"
+    }
+  },
   "packageManager": "yarn@4.11.0",
   "bin": {
     "dxf-to-svg": "lib/cli.js"

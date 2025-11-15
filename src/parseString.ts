@@ -5,9 +5,9 @@ import objectsHandler from './handlers/objects'
 import tablesHandler from './handlers/tables'
 import logger from './util/logger'
 
-import type { ParsedDXF } from './types'
+import type { ParsedDXF, DXFTuple } from './types'
 
-type Tuple = [number, string | number]
+type Tuple = DXFTuple
 
 // Parse the value into the native representation
 const parseValue = (type: number, value: string): string | number => {

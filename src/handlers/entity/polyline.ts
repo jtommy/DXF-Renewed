@@ -1,8 +1,9 @@
+import type { DXFTuple } from '../../types/dxf'
+
 import common from './common'
 
 export const TYPE = 'POLYLINE'
 
-type Tuple = [number, string | number]
 
 interface Vertex {
   [key: string]: unknown
@@ -18,7 +19,7 @@ interface PolylineEntity {
   [key: string]: unknown
 }
 
-export const process = (tuples: Tuple[]): PolylineEntity => {
+export const process = (tuples: DXFTuple[]): PolylineEntity => {
   return tuples.reduce(
     (entity, tuple) => {
       const type = tuple[0]

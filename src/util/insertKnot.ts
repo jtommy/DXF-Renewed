@@ -1,12 +1,4 @@
-interface Point {
-  x: number
-  y: number
-}
-
-interface InsertKnotResult {
-  controlPoints: Point[]
-  knots: number[]
-}
+import type { UtilPoint, InsertKnotResult } from '../types/util-types'
 
 /**
  * Knot insertion is known as "Boehm's algorithm"
@@ -16,7 +8,7 @@ interface InsertKnotResult {
  */
 export default function insertKnot(
   k: number,
-  controlPoints: Point[],
+  controlPoints: UtilPoint[],
   knots: number[],
   newKnot: number
 ): InsertKnotResult {
@@ -48,7 +40,7 @@ export default function insertKnot(
   }
 
   let alpha: number
-  const bHat: Point[] = []
+  const bHat: UtilPoint[] = []
   for (let j = 0; j < n + 1; j++) {
     if (j <= i - k + 1) {
       alpha = 1

@@ -1,8 +1,10 @@
+import expectModule from 'expect'
 import fs from 'fs'
-import { join } from 'path'
-import expect from 'expect'
-
 import { parseString, toSVG } from '../../src'
+import { getResourcePath } from './test-helpers.js'
+
+// ESM compatibility: extract expect function
+const expect = expectModule.expect || expectModule.default
 
 const dxfsFilenames = [
   'elliptical-arc1.dxf',
@@ -28,7 +30,7 @@ const dxfsFilenames = [
 // Load and parse DXFs
 const dxfs = dxfsFilenames.reduce((dxfObj, dxfFilename) => {
   dxfObj[dxfFilename] = parseString(
-    fs.readFileSync(join(__dirname, '/../resources/' + dxfFilename), 'utf-8'),
+    fs.readFileSync(getResourcePath(import.meta.url, '' + dxfFilename), 'utf-8'),
   )
   return dxfObj
 }, {})

@@ -35,3 +35,14 @@ export * from './options'
 
 // Helper
 export * from './helper'
+
+// Conversion types
+export * from './polylines'
+export * from './svg'
+export * from './layer-groups'
+
+// Utility types
+export * from './util-types'
+
+// Handler internal types
+export * from './handler-internal'

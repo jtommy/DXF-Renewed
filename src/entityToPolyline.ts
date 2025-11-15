@@ -2,22 +2,15 @@ import bSpline from './util/bSpline'
 import createArcForLWPolyine from './util/createArcForLWPolyline'
 import logger from './util/logger'
 
-type Point = [number, number]
+import type { PointTuple } from './types/common'
+import type { EntityToPolylineOptions, ControlPoint, HandlerVertex } from './types'
 
-interface EntityToPolylineOptions {
-  interpolationsPerSplineSegment?: number
-}
+// Re-export types for backward compatibility
+export type { EntityToPolylineOptions, ControlPoint }
 
-interface ControlPoint {
-  x: number
-  y: number
-  z?: number
-}
+type Point = PointTuple
 
-interface Vertex {
-  x: number
-  y: number
-  bulge?: number
+interface Vertex extends HandlerVertex {
   faces?: number[]
 }
 

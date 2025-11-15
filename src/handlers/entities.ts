@@ -1,3 +1,5 @@
+import type { DXFTuple } from '../types/dxf'
+
 import logger from '../util/logger'
 import arc from './entity/arc'
 import attdef from './entity/attdef'
@@ -20,7 +22,6 @@ import threeDFace from './entity/threeDFace'
 import vertex from './entity/vertex'
 import viewport from './entity/viewport'
 
-type DXFTuple = [number, string | number]
 
 const handlers: Record<string, any> = [
   point,

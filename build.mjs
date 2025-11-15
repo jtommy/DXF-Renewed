@@ -20,6 +20,19 @@ async function getEntryPoints(dir) {
 async function build() {
   const entryPoints = await getEntryPoints('src')
   
+  // Build ESM version
+  await esbuild.build({
+    entryPoints,
+    outdir: 'lib',
+    platform: 'node',
+    format: 'esm',
+    target: 'es2015',
+    sourcemap: true,
+    outExtension: { '.js': '.js' },
+    logLevel: 'info',
+  })
+  
+  // Build CommonJS version for backwards compatibility
   await esbuild.build({
     entryPoints,
     outdir: 'lib',
@@ -27,11 +40,11 @@ async function build() {
     format: 'cjs',
     target: 'es2015',
     sourcemap: true,
-    outExtension: { '.js': '.js' },
+    outExtension: { '.js': '.cjs' },
     logLevel: 'info',
   })
   
-  console.log('✓ Build completed successfully')
+  console.log('✓ Build completed successfully (ESM + CJS)')
 }
 
 try {

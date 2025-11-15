@@ -1,8 +1,9 @@
+import type { DXFTuple } from '../../types/dxf'
+
 import common from './common'
 
 export const TYPE = 'ARC'
 
-type Tuple = [number, string | number]
 
 interface ArcEntity {
   type: typeof TYPE
@@ -16,7 +17,7 @@ interface ArcEntity {
   [key: string]: unknown
 }
 
-export const process = (tuples: Tuple[]): ArcEntity => {
+export const process = (tuples: DXFTuple[]): ArcEntity => {
   return tuples.reduce(
     (entity, tuple) => {
       const type = tuple[0]

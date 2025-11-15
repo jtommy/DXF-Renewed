@@ -1,10 +1,11 @@
+import type { DXFTuple } from '../../types/dxf'
+
 import common from './common'
 
 import type { InsertEntity } from '../../types'
 
 export const TYPE = 'INSERT'
 
-type DXFTuple = [number, string | number]
 
 export const process = (tuples: DXFTuple[]): InsertEntity => {
   return tuples.reduce(

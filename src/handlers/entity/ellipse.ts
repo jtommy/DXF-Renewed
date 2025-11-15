@@ -1,10 +1,11 @@
+import type { DXFTuple } from '../../types/dxf'
+
 import common from './common'
 
 import type { EllipseEntity } from '../../types'
 
 export const TYPE = 'ELLIPSE'
 
-type DXFTuple = [number, string | number]
 
 export const process = (tuples: DXFTuple[]): EllipseEntity => {
   return tuples.reduce(

@@ -1,4 +1,5 @@
-import expect from 'expect'
+import expectModule from 'expect'
+const expect = expectModule.expect || expectModule.default
 
 import getRGBForEntity from '../../src/getRGBForEntity'
 

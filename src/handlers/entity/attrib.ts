@@ -1,8 +1,9 @@
+import type { DXFTuple } from '../../types/dxf'
+
 import { assign } from './attdef'
 
 export const TYPE = 'ATTRIB'
 
-type DXFTuple = [number, string | number]
 
 export const process = (tuples: DXFTuple[]): any => {
   return tuples.reduce(

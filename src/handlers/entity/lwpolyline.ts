@@ -1,10 +1,11 @@
+import type { DXFTuple } from '../../types/dxf'
+
 import common from './common'
 
 import type { Point3D, PolylineEntity } from '../../types'
 
 export const TYPE = 'LWPOLYLINE'
 
-type DXFTuple = [number, string | number]
 
 interface PolylineVertex extends Point3D {
   bulge?: number

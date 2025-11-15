@@ -1,10 +1,11 @@
+import expectModule from 'expect'
 import fs from 'fs'
-import { join } from 'path'
-import expect from 'expect'
+import { getResourcePath } from './test-helpers.js'
+const expect = expectModule.expect || expectModule.default
 
 import { parseString } from '../../src'
 const dxfContents = fs.readFileSync(
-  join(__dirname, '/../resources/attribute.dxf'),
+  getResourcePath(import.meta.url, 'attribute.dxf'),
   'utf-8',
 )
 

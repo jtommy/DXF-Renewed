@@ -1,6 +1,7 @@
+import { getResourcePath } from './test-helpers.js'
 import fs from 'fs'
-import { join } from 'path'
-import expect from 'expect'
+import expectModule from 'expect'
+const expect = expectModule.expect || expectModule.default
 
 import { parseString, denormalise } from '../../src'
 import entityToPolyline from '../../src/entityToPolyline'
@@ -9,7 +10,7 @@ import applyTransforms from '../../src/applyTransforms'
 describe('Entity To Polyline', () => {
   it('supports LINE', () => {
     const parsed = parseString(
-      fs.readFileSync(join(__dirname, '../resources/lines.dxf'), 'utf-8'),
+      fs.readFileSync(getResourcePath(import.meta.url, 'lines.dxf'), 'utf-8'),
     )
     const entities = denormalise(parsed)
     expect(entities.length).toEqual(11)
@@ -23,7 +24,7 @@ describe('Entity To Polyline', () => {
 
   it('supports LWPOLYLINE', () => {
     const parsed = parseString(
-      fs.readFileSync(join(__dirname, '../resources/lwpolylines.dxf'), 'utf-8'),
+      fs.readFileSync(getResourcePath(import.meta.url, 'lwpolylines.dxf'), 'utf-8'),
     )
     const entities = denormalise(parsed)
     expect(entities.length).toEqual(2)
@@ -53,7 +54,7 @@ describe('Entity To Polyline', () => {
     // used for closing it was no copied by mutated multiple times
     const parsed = parseString(
       fs.readFileSync(
-        join(__dirname, '../resources/closedlwpolylinebug.dxf'),
+        getResourcePath(import.meta.url, 'closedlwpolylinebug.dxf'),
         'utf-8',
       ),
     )
@@ -90,7 +91,7 @@ describe('Entity To Polyline', () => {
   it('supports CIRCLE, ELLIPSE, ARC', () => {
     const parsed = parseString(
       fs.readFileSync(
-        join(__dirname, '../resources/circlesellipsesarcs.dxf'),
+        getResourcePath(import.meta.url, 'circlesellipsesarcs.dxf'),
         'utf-8',
       ),
     )
@@ -106,7 +107,7 @@ describe('Entity To Polyline', () => {
 
   it('supports SPLINE', () => {
     const parsed = parseString(
-      fs.readFileSync(join(__dirname, '../resources/splines.dxf'), 'utf-8'),
+      fs.readFileSync(getResourcePath(import.meta.url, 'splines.dxf'), 'utf-8'),
     )
     const entities = denormalise(parsed)
     expect(entities.length).toEqual(2)
@@ -121,7 +122,7 @@ describe('Entity To Polyline', () => {
 
   it('supports BLOCK with INSERT', () => {
     const parsed = parseString(
-      fs.readFileSync(join(__dirname, '../resources/blocks1.dxf'), 'utf-8'),
+      fs.readFileSync(getResourcePath(import.meta.url, 'blocks1.dxf'), 'utf-8'),
     )
     const entities = denormalise(parsed)
     expect(entities.length).toEqual(10)

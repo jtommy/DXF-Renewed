@@ -1,8 +1,9 @@
+import type { DXFTuple } from '../../types/dxf'
+
 import common from './common'
 import { assign as assignMTEXT } from './mtext'
 import { assign as assignTEXT } from './text'
 
-type DXFTuple = [number, string | number]
 
 export const TYPE = 'ATTDEF'
 

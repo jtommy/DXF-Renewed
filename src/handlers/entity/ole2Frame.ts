@@ -1,6 +1,7 @@
+import type { DXFTuple } from '../../types/dxf'
+
 import common from './common'
 
-type DXFTuple = [number, string | number]
 
 export const TYPE = 'OLE2FRAME'
 

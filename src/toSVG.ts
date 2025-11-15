@@ -22,11 +22,7 @@ import type {
   SplineEntity,
   TextEntity,
 } from './types'
-
-interface BoundsAndElement {
-  bbox: Box2
-  element: string
-}
+import type { BoundsAndElement } from './types/svg'
 
 const addFlipXIfApplicable = (
   entity: Entity,

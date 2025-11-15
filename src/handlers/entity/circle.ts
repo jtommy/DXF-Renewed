@@ -1,8 +1,9 @@
+import type { DXFTuple } from '../../types/dxf'
+
 import common from './common'
 
 export const TYPE = 'CIRCLE'
 
-type Tuple = [number, string | number]
 
 interface CircleEntity {
   type: typeof TYPE
@@ -13,7 +14,7 @@ interface CircleEntity {
   [key: string]: unknown
 }
 
-export const process = (tuples: Tuple[]): CircleEntity => {
+export const process = (tuples: DXFTuple[]): CircleEntity => {
   return tuples.reduce(
     (entity, tuple) => {
       const type = tuple[0]
