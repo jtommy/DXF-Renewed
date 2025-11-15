@@ -15,8 +15,7 @@ import type {
 import type { PointTuple } from './types/common'
 
 // Re-export types for backward compatibility
-export type { ControlPoint } from './types'
-export type { EntityToPolylineOptions } from './types'
+export type { ControlPoint, EntityToPolylineOptions } from './types'
 
 type Point = PointTuple
 

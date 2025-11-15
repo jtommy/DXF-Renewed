@@ -1,5 +1,8 @@
 // DXF color table mapping color numbers to RGB values
-export type ColorRGB = [number, number, number]
+import type { ColorRGB } from '../types/common'
+
+// Re-export for backward compatibility
+export type { ColorRGB } from '../types/common'
 
 const colors: ColorRGB[] = [
   [0, 0, 0],
