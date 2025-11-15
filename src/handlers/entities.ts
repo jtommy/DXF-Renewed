@@ -1,4 +1,6 @@
 import type { DXFTuple } from '../types/dxf'
+import type { Entity } from '../types/entity'
+import type { PolylineEntity } from '../types/polyline-entity'
 
 import logger from '../util/logger'
 import arc from './entity/arc'
@@ -22,8 +24,12 @@ import threeDFace from './entity/threeDFace'
 import vertex from './entity/vertex'
 import viewport from './entity/viewport'
 
+interface EntityHandler {
+  TYPE: string
+  process: (tuples: DXFTuple[]) => Entity
+}
 
-const handlers: Record<string, any> = [
+const handlers: Record<string, EntityHandler> = [
   point,
   line,
   lwpolyline,
@@ -47,12 +53,18 @@ const handlers: Record<string, any> = [
 ].reduce((acc, mod) => {
   acc[mod.TYPE] = mod
   return acc
-}, {} as Record<string, any>)
+}, {} as Record<string, EntityHandler>)
 
-export default function parseEntities(tuples: DXFTuple[]): any[] {
-  const entities = []
-  const entityGroups = []
-  let currentEntityTuples
+/**
+ * Parses entities from DXF tuples
+ *
+ * @param tuples - Array of DXF tuples representing entities
+ * @returns Array of parsed entities
+ */
+export default function parseEntities(tuples: DXFTuple[]): Entity[] {
+  const entities: Entity[] = []
+  const entityGroups: DXFTuple[][] = []
+  let currentEntityTuples: DXFTuple[] = []
 
   // First group them together for easy processing
   for (const tuple of tuples) {
@@ -64,7 +76,7 @@ export default function parseEntities(tuples: DXFTuple[]): any[] {
     currentEntityTuples.push(tuple)
   }
 
-  let currentPolyline
+  let currentPolyline: PolylineEntity | undefined
   for (const tuples of entityGroups) {
     const entityType = tuples[0][1]
     const contentTuples = tuples.slice(1)
@@ -76,11 +88,11 @@ export default function parseEntities(tuples: DXFTuple[]): any[] {
       // Essentially we convert POLYLINE to LWPOLYLINE - the extra
       // vertex flags are not supported
       if (entityType === 'POLYLINE') {
-        currentPolyline = e
+        currentPolyline = e as PolylineEntity
         entities.push(e)
       } else if (entityType === 'VERTEX') {
         if (currentPolyline) {
-          currentPolyline.vertices.push(e)
+          currentPolyline.vertices.push(e as any)
         } else {
           logger.error('ignoring invalid VERTEX entity')
         }

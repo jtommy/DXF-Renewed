@@ -37,6 +37,7 @@ describe('HATCH', () => {
         dashCount: 0,
       },
       boundary: {
+        count: 1,
         loops: [
           {
             references: [],
@@ -796,7 +797,6 @@ describe('HATCH', () => {
             sourceObjects: 0,
           },
         ],
-        count: 1,
       },
       seeds: {
         count: 1,
@@ -807,7 +807,12 @@ describe('HATCH', () => {
           },
         ],
       },
-      color: {},
+      color: {
+        count: 0,
+        rotation: 0,
+        gradient: 0,
+        tint: 0,
+      },
       handle: '7D',
       layer: '3 TRAMA SEC. M1',
       patternName: '_U',
