@@ -112,6 +112,17 @@ const circle = (entity: CircleEntity): BoundsAndElement => {
   return transformBoundingBoxAndElement(bbox, element, entity.transforms ?? [])
 }
 
+interface EllipticArcParams {
+  cx: number
+  cy: number
+  majorX: number
+  majorY: number
+  axisRatio: number
+  startAngle: number
+  endAngle: number
+  flipX?: boolean
+}
+
 /**
  * Create a a <path d="A..." /> or <ellipse /> element for the ARC or ELLIPSE
  * DXF entity (<ellipse /> if start and end point are the same).
@@ -173,16 +184,6 @@ const ellipseOrArc = (params: EllipticArcParams): BoundsAndElement => {
 /**
  * Compute the bounding box of an elliptical arc, given the DXF entity parameters
  */
-interface EllipticArcParams {
-  cx: number
-  cy: number
-  majorX: number
-  majorY: number
-  axisRatio: number
-  startAngle: number
-  endAngle: number
-  flipX?: boolean
-}
 
 const bboxEllipseOrArc = (params: EllipticArcParams): Box2 => {
   const { cx, cy, majorX, majorY, axisRatio } = params
@@ -346,83 +347,6 @@ const mtext = (entity: MTextEntity): BoundsAndElement => {
     bbox: bbox0,
     element: element0,
   })
-  return transformBoundingBoxAndElement(bbox, element, entity.transforms ?? [])
-}
-
-/**
- * Create dimension lines based on dimension type
- * @deprecated Use dimensionToSVG module instead
- */
-const createDimensionPaths = (entity: DimensionEntity, bbox: Box2): string[] => {
-  const paths = []
-
-  if (entity.dimensionType === 0 || entity.dimensionType === 1) {
-    // Rotated/Aligned dimension
-    if (entity.measureStart && entity.measureEnd) {
-      const x1 = entity.measureStart.x || 0
-      const y1 = entity.measureStart.y || 0
-      const x2 = entity.measureEnd.x || 0
-      const y2 = entity.measureEnd.y || 0
-
-      bbox.expandByPoint({ x: x1, y: y1 })
-      bbox.expandByPoint({ x: x2, y: y2 })
-
-      paths.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" />`)
-    }
-
-    // Add dimension line at text position
-    if (entity.start) {
-      const sx = entity.start.x || 0
-      const sy = entity.start.y || 0
-      bbox.expandByPoint({ x: sx, y: sy })
-    }
-  } else if (entity.dimensionType === 3 || entity.dimensionType === 4) {
-    // Diameter or Radius dimension
-    if (entity.measureStart && entity.measureEnd) {
-      const x1 = entity.measureStart.x || 0
-      const y1 = entity.measureStart.y || 0
-      const x2 = entity.measureEnd.x || 0
-      const y2 = entity.measureEnd.y || 0
-
-      bbox.expandByPoint({ x: x1, y: y1 })
-      bbox.expandByPoint({ x: x2, y: y2 })
-
-      paths.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" />`)
-    }
-  } else if (entity.dimensionType === 6) {
-    // Ordinate dimension
-    if (entity.measureStart && entity.start) {
-      const x1 = entity.measureStart.x || 0
-      const y1 = entity.measureStart.y || 0
-      const x2 = entity.start.x || 0
-      const y2 = entity.start.y || 0
-
-      bbox.expandByPoint({ x: x1, y: y1 })
-      bbox.expandByPoint({ x: x2, y: y2 })
-
-      paths.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" />`)
-    }
-  }
-
-  return paths
-}
-
-/**
- * Create dimension visualization (lines and text)
- * @deprecated Use dimensionToSVG module instead
- */
-const dimensionLegacy = (entity: DimensionEntity): BoundsAndElement => {
-  const bbox = new Box2()
-
-  // Add text at midpoint
-  if (entity.textMidpoint) {
-    const tx = entity.textMidpoint.x ?? 0
-    const ty = entity.textMidpoint.y ?? 0
-    bbox.expandByPoint({ x: tx, y: ty })
-  }
-
-  const paths = createDimensionPaths(entity, bbox)
-  const element = `<g>${paths.join('')}</g>`
   return transformBoundingBoxAndElement(bbox, element, entity.transforms ?? [])
 }
 

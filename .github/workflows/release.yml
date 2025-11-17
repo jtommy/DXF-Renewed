@@ -52,9 +52,8 @@ jobs:
       - name: Run tests
         run: yarn test
 
-      # Skip linting for now - Babel parser has issues with TS + type:module
-      # - name: Run linter
-      #   run: yarn lint
+      - name: Run linter
+        run: yarn lint
 
   release:
     name: Release

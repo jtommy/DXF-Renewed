@@ -65,6 +65,7 @@ export default function transformBoundingBoxAndElement(
     transformedElement += `<g transform="matrix(${a} ${b} ${c} ${d} ${e} ${f})">`
   }
   transformedElement += element
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   for (const _ of matrices) {
     transformedElement += '</g>'
   }

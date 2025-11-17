@@ -33,4 +33,5 @@ export interface Transform {
 }
 
 /** Transform with all properties required */
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface ZeroTransform extends Required<Transform> {}
