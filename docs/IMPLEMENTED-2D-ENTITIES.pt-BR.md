@@ -16,7 +16,7 @@ Esta lista foi gerada com base na documentação de referência do AutoCAD 2012 
 | **SOLID** | ✅ | Uma área 2D preenchida com cor sólida. |
 | **SPLINE** | ✅ | Uma curva spline. |
 | **TEXT** | ✅ | Uma única linha de texto. |
-| **DIMENSION** | ✅ | Entidade de dimensão (linear, angular, radial, etc.). |
+| **DIMENSION** | ✅ | Entidade de dimensão (linear, angular, radial, etc.). **Implementação completa**: parsing de text e styleName, integração com DIMSTYLE (68+ propriedades), renderização de 6 tipos de dimensão com extension lines, setas, rotação de texto, suporte a cores (DIMCLRD, DIMCLRE, DIMCLRT) e espessuras (DIMLWD, DIMLWE). Ver `docs/DIMENSION_IMPLEMENTATION_PLAN.md` para detalhes. |
 | **INSERT** | ✅ | Uma inserção de bloco (block reference). |
 | **ATTDEF** | ✅ | Definição de atributo para um bloco. |
 | **ATTRIB** | ✅ | Uma instância de atributo anexada a um bloco. |

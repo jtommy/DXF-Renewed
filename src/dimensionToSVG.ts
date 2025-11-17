@@ -1,8 +1,51 @@
 import { Box2 } from 'vecks'
 
+import colors from './util/colors'
+
 import type { DimensionEntity } from './types'
 import type { DimStyleTable } from './types/dxf'
 import type { BoundsAndElement } from './types/svg'
+
+/**
+ * Convert DXF color number to SVG color string
+ */
+function colorNumberToSVG(colorNumber?: number): string {
+  if (colorNumber === undefined || colorNumber < 0) {
+    return 'currentColor'
+  }
+
+  // DXF color 0 is ByBlock, 256 is ByLayer, 7 is white/black (depends on bg)
+  if (colorNumber === 0 || colorNumber === 256) {
+    return 'currentColor'
+  }
+
+  // Get RGB from color table
+  const rgb = colors[colorNumber]
+  if (!rgb) {
+    return 'currentColor'
+  }
+
+  return `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`
+}
+
+/**
+ * Get dimension colors and weights from DIMSTYLE with defaults
+ */
+function getDimensionColors(dimStyle?: DimStyleTable): {
+  dimLineColor: string
+  extLineColor: string
+  textColor: string
+  dimLineWeight: number
+  extLineWeight: number
+} {
+  return {
+    dimLineColor: colorNumberToSVG(dimStyle?.dimClrd),
+    extLineColor: colorNumberToSVG(dimStyle?.dimClre),
+    textColor: colorNumberToSVG(dimStyle?.dimClrt),
+    dimLineWeight: dimStyle?.dimLwd ?? 0.5,
+    extLineWeight: dimStyle?.dimLwe ?? 0.5,
+  }
+}
 
 /**
  * Render DIMENSION entity to SVG with proper DIMSTYLE support
@@ -60,6 +103,7 @@ function renderLinearDimension(
   const textHeight = dimStyle?.dimTxt ?? 2.5
   const extLineOffset = dimStyle?.dimExo ?? 0.625
   const extLineExtension = dimStyle?.dimExe ?? 1.25
+  const { dimLineColor, extLineColor, textColor, dimLineWeight, extLineWeight } = getDimensionColors(dimStyle)
 
   // Extract dimension geometry
   const defPoint1X = entity.measureStart?.x ?? 0
@@ -90,11 +134,11 @@ function renderLinearDimension(
   // Create unique marker IDs for arrows
   const markerId1 = `dim-arrow-start-${Date.now()}`
   const markerId2 = `dim-arrow-end-${Date.now()}`
-  
-  // Create arrow markers
+
+  // Create arrow markers with dimension line color
   markers.push(
-    createArrowMarker(markerId1, arrowSize, 'currentColor'),
-    createArrowMarker(markerId2, arrowSize, 'currentColor'),
+    createArrowMarker(markerId1, arrowSize, dimLineColor),
+    createArrowMarker(markerId2, arrowSize, dimLineColor),
   )
 
   // Draw extension lines
@@ -102,23 +146,23 @@ function renderLinearDimension(
   const extLine1StartY = defPoint1Y + Math.sin(perpAngle) * extLineOffset
   const extLine1EndX = dimLine1X + Math.cos(perpAngle) * extLineExtension
   const extLine1EndY = dimLine1Y + Math.sin(perpAngle) * extLineExtension
-  
+
   const extLine2StartX = defPoint2X + Math.cos(perpAngle) * extLineOffset
   const extLine2StartY = defPoint2Y + Math.sin(perpAngle) * extLineOffset
   const extLine2EndX = dimLine2X + Math.cos(perpAngle) * extLineExtension
   const extLine2EndY = dimLine2Y + Math.sin(perpAngle) * extLineExtension
 
   elements.push(
-    `<line x1="${extLine1StartX}" y1="${extLine1StartY}" x2="${extLine1EndX}" y2="${extLine1EndY}" stroke-width="0.5" />`,
-    `<line x1="${extLine2StartX}" y1="${extLine2StartY}" x2="${extLine2EndX}" y2="${extLine2EndY}" stroke-width="0.5" />`,
-    `<line x1="${dimLine1X}" y1="${dimLine1Y}" x2="${dimLine2X}" y2="${dimLine2Y}" stroke-width="0.5" marker-start="url(#${markerId1})" marker-end="url(#${markerId2})" />`,
+    `<line x1="${extLine1StartX}" y1="${extLine1StartY}" x2="${extLine1EndX}" y2="${extLine1EndY}" stroke="${extLineColor}" stroke-width="${extLineWeight}" />`,
+    `<line x1="${extLine2StartX}" y1="${extLine2StartY}" x2="${extLine2EndX}" y2="${extLine2EndY}" stroke="${extLineColor}" stroke-width="${extLineWeight}" />`,
+    `<line x1="${dimLine1X}" y1="${dimLine1Y}" x2="${dimLine2X}" y2="${dimLine2Y}" stroke="${dimLineColor}" stroke-width="${dimLineWeight}" marker-start="url(#${markerId1})" marker-end="url(#${markerId2})" />`,
   )
 
   // Add dimension text
   if (entity.text) {
     const textRotation = (angle * 180) / Math.PI
     elements.push(
-      `<text x="${textX}" y="${textY}" font-size="${textHeight}" text-anchor="middle" transform="rotate(${-textRotation} ${textX} ${textY}) scale(1,-1) translate(0 ${-2 * textY})">${entity.text}</text>`,
+      `<text x="${textX}" y="${textY}" font-size="${textHeight}" fill="${textColor}" text-anchor="middle" transform="rotate(${-textRotation} ${textX} ${textY}) scale(1,-1) translate(0 ${-2 * textY})">${entity.text}</text>`,
     )
   }
 
@@ -142,6 +186,7 @@ function renderAngularDimension(
   // Get dimension style properties
   const arrowSize = dimStyle?.dimAsz ?? 2.5
   const textHeight = dimStyle?.dimTxt ?? 2.5
+  const { dimLineColor, extLineColor, textColor, dimLineWeight, extLineWeight } = getDimensionColors(dimStyle)
 
   // Extract points
   const centerX = entity.start?.x ?? 0
@@ -162,14 +207,14 @@ function renderAngularDimension(
   const markerId1 = `dim-angular-arrow-start-${Date.now()}`
   const markerId2 = `dim-angular-arrow-end-${Date.now()}`
   markers.push(
-    createArrowMarker(markerId1, arrowSize, 'currentColor'),
-    createArrowMarker(markerId2, arrowSize, 'currentColor'),
+    createArrowMarker(markerId1, arrowSize, dimLineColor),
+    createArrowMarker(markerId2, arrowSize, dimLineColor),
   )
 
   // Draw extension lines from center to definition points
   elements.push(
-    `<line x1="${centerX}" y1="${centerY}" x2="${x1}" y2="${y1}" stroke-width="0.5" />`,
-    `<line x1="${centerX}" y1="${centerY}" x2="${x2}" y2="${y2}" stroke-width="0.5" />`,
+    `<line x1="${centerX}" y1="${centerY}" x2="${x1}" y2="${y1}" stroke="${extLineColor}" stroke-width="${extLineWeight}" />`,
+    `<line x1="${centerX}" y1="${centerY}" x2="${x2}" y2="${y2}" stroke="${extLineColor}" stroke-width="${extLineWeight}" />`,
   )
 
   // Calculate arc radius (distance from center to text midpoint)
@@ -185,16 +230,16 @@ function renderAngularDimension(
   const arcEndY = centerY + radius * Math.sin(endAngle)
 
   elements.push(
-    `<path d="M ${arcStartX} ${arcStartY} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${arcEndX} ${arcEndY}" fill="none" stroke-width="0.5" marker-start="url(#${markerId1})" marker-end="url(#${markerId2})" />`,
+    `<path d="M ${arcStartX} ${arcStartY} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${arcEndX} ${arcEndY}" fill="none" stroke="${dimLineColor}" stroke-width="${dimLineWeight}" marker-start="url(#${markerId1})" marker-end="url(#${markerId2})" />`,
   )
 
   // Add dimension text
   if (entity.text) {
     const midAngle = (startAngle + endAngle) / 2
     const textRotation = (midAngle * 180) / Math.PI
-    
+
     elements.push(
-      `<text x="${textX}" y="${textY}" font-size="${textHeight}" text-anchor="middle" transform="rotate(${-textRotation} ${textX} ${textY}) scale(1,-1) translate(0 ${-2 * textY})">${entity.text}</text>`,
+      `<text x="${textX}" y="${textY}" font-size="${textHeight}" fill="${textColor}" text-anchor="middle" transform="rotate(${-textRotation} ${textX} ${textY}) scale(1,-1) translate(0 ${-2 * textY})">${entity.text}</text>`,
     )
   }
 
@@ -218,6 +263,7 @@ function renderDiameterDimension(
   // Get dimension style properties
   const arrowSize = dimStyle?.dimAsz ?? 2.5
   const textHeight = dimStyle?.dimTxt ?? 2.5
+  const { dimLineColor, textColor, dimLineWeight } = getDimensionColors(dimStyle)
 
   // Extract geometry
   const x1 = entity.measureStart?.x ?? 0
@@ -233,20 +279,20 @@ function renderDiameterDimension(
 
   // Create arrow markers
   const markerId = `dim-diameter-arrow-${Date.now()}`
-  markers.push(createArrowMarker(markerId, arrowSize, 'currentColor'))
+  markers.push(createArrowMarker(markerId, arrowSize, dimLineColor))
 
   // Create diameter line with arrow at the end
   elements.push(
-    `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke-width="0.5" marker-end="url(#${markerId})" />`,
+    `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${dimLineColor}" stroke-width="${dimLineWeight}" marker-end="url(#${markerId})" />`,
   )
 
   // Add dimension text with diameter symbol
   const diameterText = entity.text ? `⌀${entity.text}` : '⌀'
   const angle = Math.atan2(y2 - y1, x2 - x1)
   const textRotation = (angle * 180) / Math.PI
-  
+
   elements.push(
-    `<text x="${textX}" y="${textY}" font-size="${textHeight}" text-anchor="middle" transform="rotate(${-textRotation} ${textX} ${textY}) scale(1,-1) translate(0 ${-2 * textY})">${diameterText}</text>`,
+    `<text x="${textX}" y="${textY}" font-size="${textHeight}" fill="${textColor}" text-anchor="middle" transform="rotate(${-textRotation} ${textX} ${textY}) scale(1,-1) translate(0 ${-2 * textY})">${diameterText}</text>`,
   )
 
   return {
@@ -269,6 +315,7 @@ function renderRadialDimension(
   // Get dimension style properties
   const arrowSize = dimStyle?.dimAsz ?? 2.5
   const textHeight = dimStyle?.dimTxt ?? 2.5
+  const { dimLineColor, textColor, dimLineWeight } = getDimensionColors(dimStyle)
 
   // Extract geometry
   const x1 = entity.measureStart?.x ?? 0
@@ -284,20 +331,20 @@ function renderRadialDimension(
 
   // Create arrow markers
   const markerId = `dim-radius-arrow-${Date.now()}`
-  markers.push(createArrowMarker(markerId, arrowSize, 'currentColor'))
+  markers.push(createArrowMarker(markerId, arrowSize, dimLineColor))
 
   // Create radius line with arrow at the end
   elements.push(
-    `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke-width="0.5" marker-end="url(#${markerId})" />`,
+    `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${dimLineColor}" stroke-width="${dimLineWeight}" marker-end="url(#${markerId})" />`,
   )
 
   // Add dimension text with radius symbol
   const radiusText = entity.text ? `R${entity.text}` : 'R'
   const angle = Math.atan2(y2 - y1, x2 - x1)
   const textRotation = (angle * 180) / Math.PI
-  
+
   elements.push(
-    `<text x="${textX}" y="${textY}" font-size="${textHeight}" text-anchor="middle" transform="rotate(${-textRotation} ${textX} ${textY}) scale(1,-1) translate(0 ${-2 * textY})">${radiusText}</text>`,
+    `<text x="${textX}" y="${textY}" font-size="${textHeight}" fill="${textColor}" text-anchor="middle" transform="rotate(${-textRotation} ${textX} ${textY}) scale(1,-1) translate(0 ${-2 * textY})">${radiusText}</text>`,
   )
 
   return {
@@ -318,6 +365,7 @@ function renderOrdinateDimension(
 
   // Get dimension style properties
   const textHeight = dimStyle?.dimTxt ?? 2.5
+  const { dimLineColor, textColor, dimLineWeight } = getDimensionColors(dimStyle)
 
   // Extract geometry
   const x1 = entity.measureStart?.x ?? 0
@@ -333,16 +381,16 @@ function renderOrdinateDimension(
 
   // Create leader line (no arrow for ordinate dimensions)
   elements.push(
-    `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke-width="0.5" />`,
+    `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${dimLineColor}" stroke-width="${dimLineWeight}" />`,
   )
 
   // Add dimension text
   if (entity.text) {
     const angle = Math.atan2(y2 - y1, x2 - x1)
     const textRotation = (angle * 180) / Math.PI
-    
+
     elements.push(
-      `<text x="${textX}" y="${textY}" font-size="${textHeight}" text-anchor="middle" transform="rotate(${-textRotation} ${textX} ${textY}) scale(1,-1) translate(0 ${-2 * textY})">${entity.text}</text>`,
+      `<text x="${textX}" y="${textY}" font-size="${textHeight}" fill="${textColor}" text-anchor="middle" transform="rotate(${-textRotation} ${textX} ${textY}) scale(1,-1) translate(0 ${-2 * textY})">${entity.text}</text>`,
     )
   }
 

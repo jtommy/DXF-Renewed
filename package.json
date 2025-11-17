@@ -23,16 +23,21 @@
   "scripts": {
     "compile:ts": "tsc",
     "compile": "node build.mjs",
+    "build": "npm run compile",
     "watch": "tsc --watch",
     "type-check": "tsc --noEmit",
     "dist": "browserify lib/index.js --standalone dxf -o dist/dxf.js",
     "lint": "eslint src test",
-    "prepublishOnly": "npm run lint && npm run type-check && npm run test && rimraf dist/ lib/ && npm run compile && npm run dist",
+    "clean": "rimraf dist/ lib/",
+    "prepublishOnly": "npm run lint && npm run type-check && npm run test && npm run clean && npm run build && npm run dist",
     "prettier": "prettier --write .",
     "test": "npm run test:unit",
     "test:functional": "cd test/functional && webpack-dev-server",
     "test:unit": "mocha --require tsx --recursive test/unit/** --extensions .ts,.js",
-    "test:unit:watch": "npm run test:unit -- --watch"
+    "test:unit:watch": "npm run test:unit -- --watch",
+    "prepare": "husky",
+    "semantic-release": "semantic-release",
+    "commit": "git-cz"
   },
   "repository": {
     "type": "git",
@@ -52,9 +57,16 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.25.1",
     "@babel/preset-react": "^7.24.7",
+    "@commitlint/cli": "^20.1.0",
+    "@commitlint/config-conventional": "^20.0.0",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^12.0.2",
     "@types/lodash": "^4.17.20",
     "@types/node": "^24.10.1",
     "browserify": "^16.5.2",
+    "commitizen": "^4.3.1",
+    "cz-conventional-changelog": "^3.3.0",
     "esbuild": "^0.27.0",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^8.10.0",
@@ -66,6 +78,7 @@
     "eslint-plugin-react": "^7.35.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "expect": "^29.7.0",
+    "husky": "^9.1.7",
     "mocha": "^10.7.3",
     "prettier": "^3.3.3",
     "prop-types": "^15.8.1",
@@ -74,6 +87,7 @@
     "react-dom": "^16.14.0",
     "react-router-dom": "^5.3.4",
     "rimraf": "^6.0.1",
+    "semantic-release": "^25.0.2",
     "standard-version": "^9.5.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.20.6",
@@ -87,6 +101,11 @@
     "commander": "^2.20.3",
     "lodash": "^4.17.21",
     "vecks": "^3.9.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
   },
   "standard": {
     "globals": [

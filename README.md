@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/bjnortier/dxf.svg?branch=master)](https://travis-ci.org/bjnortier/dxf)
+[![semantic-release: conventionalcommits](https://img.shields.io/badge/semantic--release-conventionalcommits-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
 
 # DXF-Renewed
 
@@ -130,6 +131,7 @@ corepack enable
 ```
 
 All npm commands in the documentation can be replaced with yarn equivalents:
+
 - `npm install` → `yarn install` or just `yarn`
 - `npm test` → `yarn test`
 - `npm run compile` → `yarn compile`
@@ -236,6 +238,42 @@ yarn test           # Run all tests
 
 This project is a modernized fork of the original [dxf library by skymakerolof](https://github.com/skymakerolof/dxf), which itself was based on the work by bjnortier and many contributors. DXF-Renewed aims to maintain and improve upon this excellent foundation with modern TypeScript, enhanced performance, and new features.
 
+## Releases
+
+This project uses [semantic-release](https://semantic-release.gitbook.io/) for automated version management and package publishing.
+
+**Releases are automatically created** when commits following [Conventional Commits](https://www.conventionalcommits.org/en/) are pushed to:
+
+- `main` - Stable production releases (`1.0.0`, `1.1.0`, `2.0.0`)
+- `develop` - Pre-releases for testing (`1.1.0-dev.1`, `1.1.0-dev.2`)
+- `beta` - Beta pre-releases (`1.1.0-beta.1`, `1.1.0-beta.2`)
+
+### Commit Format
+
+```bash
+# New feature → MINOR version (1.0.0 → 1.1.0)
+feat(dimension): add DIMSTYLE color support
+
+# Bug fix → PATCH version (1.0.0 → 1.0.1)
+fix(parser): correct POLYLINE parsing
+
+# Breaking change → MAJOR version (1.0.0 → 2.0.0)
+feat!: migrate to pure ESM
+
+BREAKING CHANGE: CommonJS is no longer supported
+```
+
+### Contributing
+
+To contribute:
+
+1. Fork the repository
+2. Make commits using `yarn commit` (interactive) or following Conventional Commits
+3. Push to your fork
+4. Open a Pull Request to `develop`
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed guidelines and [docs/SEMANTIC_RELEASE.md](./docs/SEMANTIC_RELEASE.md) for release documentation.
+
 ## Contributors
 
 ### Original dxf Library Contributors
@@ -255,7 +293,7 @@ This project is a modernized fork of the original [dxf library by skymakerolof](
 
 ### DXF-Renewed Maintainers
 
-- Linkiez <https://github.com/linkiez>
+- LiNkIeZ <https://github.com/linkiez>
 
 ## License
 

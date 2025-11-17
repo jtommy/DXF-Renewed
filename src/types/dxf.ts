@@ -18,6 +18,14 @@ export interface DimStyleTable {
   dimGap?: number
   dimExo?: number
   dimExe?: number
+  dimClrd?: number
+  dimClre?: number
+  dimClrt?: number
+  dimLwd?: number
+  dimLwe?: number
+  dimBlk?: string   // Arrow block name (342)
+  dimBlk1?: string  // First arrow block (343)
+  dimBlk2?: string  // Second arrow block (344)
   [key: string]: unknown
 }
 
