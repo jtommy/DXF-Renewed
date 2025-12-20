@@ -1,5 +1,5 @@
 {
-  "name": "dxf",
+  "name": "@linkiez/dxf-renew",
   "version": "5.3.1",
   "description": "DXF parser for node/browser",
   "type": "module",
@@ -13,7 +13,7 @@
       "require": "./lib/index.cjs"
     }
   },
-  "packageManager": "yarn@4.11.0",
+  "packageManager": "yarn@4.12.0",
   "bin": {
     "dxf-to-svg": "lib/cli.js"
   },
@@ -26,7 +26,7 @@
     "build": "npm run compile",
     "watch": "tsc --watch",
     "type-check": "tsc --noEmit",
-    "dist": "browserify lib/index.js --standalone dxf -o dist/dxf.js",
+    "dist": "esbuild src/index.ts --bundle --platform=browser --format=iife --global-name=dxf --outfile=dist/dxf.js",
     "lint": "eslint src",
     "clean": "rimraf dist/ lib/",
     "prepublishOnly": "npm run lint && npm run type-check && npm run test && npm run clean && npm run build && npm run dist",
@@ -42,6 +42,10 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/skymakerolof/dxf.git"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   },
   "keywords": [
     "DXF",

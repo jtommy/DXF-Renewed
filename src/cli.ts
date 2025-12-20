@@ -5,7 +5,9 @@ import { createRequire } from 'node:module'
 
 import { denormalise, groupEntitiesByLayer, parseString, toSVG } from './'
 
-const require = createRequire(import.meta.url)
+const require = createRequire(
+  typeof __filename === 'string' ? __filename : import.meta.url,
+)
 const { version } = require('../package.json')
 
 const program = new Command()

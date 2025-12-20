@@ -60,7 +60,7 @@ All major geometric entities are **parsed and rendered to SVG**:
 TypeScript example with full type safety:
 
 ```typescript
-import { Helper } from 'dxf'
+import { Helper } from '@linkiez/dxf-renew'
 
 const helper = new Helper(dxfString)
 
@@ -80,7 +80,7 @@ console.log('polylines:', helper.toPolylines())
 JavaScript example:
 
 ```javascript
-const { Helper } = require('dxf')
+const { Helper } = require('@linkiez/dxf-renew')
 
 const helper = new Helper(dxfString)
 
@@ -161,9 +161,9 @@ const polylines = helper.toPolylines()
 There is a command-line utility (courtesy of [@Joge97](https://github.com/Joge97)) for converting DXF files to SVG:
 
 ```bash
-yarn global add dxf
+yarn global add @linkiez/dxf-renew
 # or
-npm i -g dxf
+npm i -g @linkiez/dxf-renew
 
 dxf-to-svg --help
 ```
@@ -197,6 +197,10 @@ yarn test:functional
 
 Please open `toSVG.html` when the file listing loads in the browser (or open `http://localhost:8030/toSVG.html#/`).
 
+## Development Guidelines
+
+- Code patterns and best practices: `docs/CODE_PATTERNS.md`
+
 ## TypeScript Support
 
 This library is written in TypeScript and includes full type definitions. All DXF entities, configuration options, and helper methods are fully typed.
@@ -204,7 +208,7 @@ This library is written in TypeScript and includes full type definitions. All DX
 Example with type imports:
 
 ```typescript
-import { Helper, ParsedDXF, Entity, LineEntity, CircleEntity } from 'dxf'
+import { Helper, ParsedDXF, Entity, LineEntity, CircleEntity } from '@linkiez/dxf-renew'
 
 const helper = new Helper(dxfString)
 const parsed: ParsedDXF = helper.parsed

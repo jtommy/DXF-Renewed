@@ -73,6 +73,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
+          registry-url: https://registry.npmjs.org
+
+      - name: Upgrade npm (Trusted Publishers)
+        run: npm i -g npm@^11.5.1
 
       - name: Enable Corepack
         run: corepack enable
@@ -94,11 +98,6 @@ jobs:
 
       - name: Build
         run: yarn build
-
-      - name: Create tarball for GitHub release
-        run: |
-          mkdir -p dist
-          yarn pack --out dist/%s-%v.tgz
 
       - name: Release
         env:

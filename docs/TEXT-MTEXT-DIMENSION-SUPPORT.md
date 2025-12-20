@@ -144,7 +144,7 @@ Support for all dimension types:Suporte para todos os tipos de dimensão:
 
 ```javascript```javascript
 
-import { Helper } from 'dxf'import { Helper } from 'dxf'
+import { Helper } from '@linkiez/dxf-renew'
 
 const dxfString = `... DXF content ...`const dxfString = `... conteúdo DXF ...`
 

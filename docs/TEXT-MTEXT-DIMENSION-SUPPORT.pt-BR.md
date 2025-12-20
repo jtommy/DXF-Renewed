@@ -103,7 +103,7 @@ Suporte para todos os tipos de dimensão:
 ## Exemplo de Uso
 
 ```javascript
-import { Helper } from 'dxf'
+import { Helper } from '@linkiez/dxf-renew'
 
 const dxfString = `... conteúdo DXF ...`
 const helper = new Helper(dxfString)

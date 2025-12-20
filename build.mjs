@@ -5,45 +5,56 @@ import { join } from 'node:path'
 
 async function getEntryPoints(dir) {
   const entries = []
-  const files = await readdir(dir, { withFileTypes: true, recursive: true })
-  
-  for (const file of files) {
-    if (file.isFile() && (file.name.endsWith('.ts') || file.name.endsWith('.js'))) {
-      const fullPath = join(file.path, file.name)
-      entries.push(fullPath)
+  const stack = [dir]
+
+  while (stack.length) {
+    const currentDir = stack.pop()
+    const dirEntries = await readdir(currentDir, { withFileTypes: true })
+
+    for (const entry of dirEntries) {
+      const fullPath = join(currentDir, entry.name)
+
+      if (entry.isDirectory()) {
+        stack.push(fullPath)
+        continue
+      }
+
+      if (entry.isFile() && (entry.name.endsWith('.ts') || entry.name.endsWith('.js'))) {
+        entries.push(fullPath)
+      }
     }
   }
-  
+
   return entries
 }
 
 async function build() {
   const entryPoints = await getEntryPoints('src')
-  
+
   // Build ESM version
   await esbuild.build({
     entryPoints,
     outdir: 'lib',
     platform: 'node',
     format: 'esm',
-    target: 'es2015',
+    target: 'es2020',
     sourcemap: true,
     outExtension: { '.js': '.js' },
     logLevel: 'info',
   })
-  
+
   // Build CommonJS version for backwards compatibility
   await esbuild.build({
     entryPoints,
     outdir: 'lib',
     platform: 'node',
     format: 'cjs',
-    target: 'es2015',
+    target: 'es2020',
     sourcemap: true,
     outExtension: { '.js': '.cjs' },
     logLevel: 'info',
   })
-  
+
   console.log('✓ Build completed successfully (ESM + CJS)')
 }
 
