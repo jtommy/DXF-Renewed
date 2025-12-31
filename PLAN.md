@@ -16,16 +16,29 @@ This document describes a phased plan to align this project’s DXF parsing beha
 - Full ObjectARX/.NET API parity (this is a DXF parser, not a CAD kernel).
 - Perfect fidelity for every proprietary/extension object (fallback behavior is acceptable).
 
-## References (Autodesk, AutoCAD 2024)
+## References
 
-Primary reference used for scope/checklists: AutoCAD 2024 Developer and ObjectARX Help → **DXF Reference**.
+### Primary (ezdxf stable docs)
+
+Primary reference used for day-to-day implementation details (entities/objects/tables and their attributes):
+
+- ezdxf Reference: <https://ezdxf.readthedocs.io/en/stable/reference.html>
+- Curated sitemap for this repo: [docs/EZDXF_REFERENCE_SITEMAP.md](docs/EZDXF_REFERENCE_SITEMAP.md)
+- Setup / extras install: <https://ezdxf.readthedocs.io/en/stable/setup.html#installation-with-extras>
+
+### Authoritative (Autodesk / ObjectARX)
+
+When behavior is ambiguous or disputed, treat Autodesk’s DXF reference as authoritative:
 
 - Root: <https://help.autodesk.com/view/OARX/2024/ENU/>
 - DXF Format entry point (guid): <https://help.autodesk.com/view/OARX/2024/ENU/?guid=GUID-235B22E0-A567-4CF6-92D3-38A2306D73F3>
 
-## “Sitemap” / Checklist Source (DXF Reference TOC)
+## “Sitemap” / Checklist Source
 
-This sitemap is derived from the Autodesk 2024 DXF Reference left navigation (expanded nodes).
+- Primary navigation for implementation work: [docs/EZDXF_REFERENCE_SITEMAP.md](docs/EZDXF_REFERENCE_SITEMAP.md)
+- Secondary (deep spec index): Autodesk 2024 DXF Reference TOC (kept below)
+
+### Autodesk 2024 DXF Reference TOC (expanded nodes)
 
 ### DXF Format
 
@@ -121,8 +134,8 @@ Entity parsers currently exist for (see `src/handlers/entities.ts` and `src/hand
 
 `src/handlers/objects.ts` currently parses:
 
-- Implemented: LAYOUT (partial).
-- Missing from Autodesk TOC subset above: DICTIONARY, XRECORD, DIMASSOC, IMAGEDEF (+ reactor), FIELD, TABLESTYLE, GROUP, etc.
+- Implemented: LAYOUT (partial), DICTIONARY, XRECORD.
+- Missing from Autodesk TOC subset above: DIMASSOC, IMAGEDEF (+ reactor), FIELD, TABLESTYLE, GROUP, etc.
 
 ## Project Analysis (Code-Backed)
 
@@ -398,11 +411,11 @@ The items below are the main gaps to reach “complete 2D” as defined in this 
 | Entity | Parse | Render (SVG) | Render (Polylines) | Block-safe | Minimal implementation checklist |
 | --- | --- | --- | --- | --- | --- |
 | SEQEND | Sentinel only | N/A | N/A | N/A | Add `src/handlers/entity/seqend.ts` (optional) or harden sequencing in `src/handlers/entities.ts` + add fixture that stresses POLYLINE/VERTEX/SEQEND ordering |
-| LEADER | No | No | No | No | Add `src/types/leader-entity.ts` + export in `src/types/index.ts`; add `src/handlers/entity/leader.ts`; add `toSVG` case (even minimal); add fixture + unit test |
+| LEADER | Yes | Yes | No | No | Add `src/types/leader-entity.ts` + export in `src/types/index.ts`; add `src/handlers/entity/leader.ts`; add `toSVG` case (even minimal); add fixture + unit test |
 | MLEADER | No | No | No | No | Add `src/types/mleader-entity.ts`; add `src/handlers/entity/mleader.ts`; likely requires OBJECTS support (DICTIONARY/XRECORD) for full fidelity; start with parse-only + safe ignore in render |
-| TOLERANCE | No | No | No | No | Add `src/types/tolerance-entity.ts`; add `src/handlers/entity/tolerance.ts`; render as text fallback (SVG only) |
-| IMAGE | No | No | No | No | Add `src/types/image-entity.ts`; add `src/handlers/entity/image.ts`; add OBJECTS: IMAGEDEF/IMAGEDEF_REACTOR; render as placeholder rect or ignore safely |
-| UNDERLAY | No | No | No | No | Add `src/types/underlay-entity.ts`; add `src/handlers/entity/underlay.ts`; add OBJECTS underlay defs; render placeholder/ignore |
+| TOLERANCE | Yes | Yes | No | No | Add `src/types/tolerance-entity.ts`; add `src/handlers/entity/tolerance.ts`; render as text fallback (SVG only) |
+| IMAGE | Yes | No | No | No | Add `src/types/image-entity.ts`; add `src/handlers/entity/image.ts`; add OBJECTS: IMAGEDEF/IMAGEDEF_REACTOR; render as placeholder rect or ignore safely |
+| UNDERLAY | Yes | No | No | No | Add `src/types/underlay-entity.ts`; add `src/handlers/entity/dwfUnderlay.ts` + `src/handlers/entity/dgnUnderlay.ts`; add OBJECTS: UNDERLAYDEFINITION; render placeholder/ignore |
 | WIPEOUT | No | No | No | No | Add `src/types/wipeout-entity.ts`; add `src/handlers/entity/wipeout.ts`; render as polygon mask approximation or ignore safely |
 | RAY | No | No | No | No | Add `src/types/ray-entity.ts`; add `src/handlers/entity/ray.ts`; render as long line (bounded by extents) or ignore |
 | XLINE | No | No | No | No | Add `src/types/xline-entity.ts`; add `src/handlers/entity/xline.ts`; render as long line (bounded by extents) or ignore |
@@ -426,10 +439,11 @@ The items below are the main gaps to reach “complete 2D” as defined in this 
 
 | Object | Current status | Primary file(s) to change | Minimal checklist |
 | --- | --- | --- | --- |
-| DICTIONARY | Missing | `src/handlers/objects.ts` (+ new types file if desired) | Group objects by `0`; add DICTIONARY parser; store by handle for lookup |
-| XRECORD | Missing | `src/handlers/objects.ts` | Add XRECORD parser; preserve raw records for downstream consumers |
+| DICTIONARY | Implemented | `src/handlers/objects.ts` (+ new types file if desired) | Group objects by `0`; add DICTIONARY parser; store by handle for lookup |
+| XRECORD | Implemented | `src/handlers/objects.ts` | Add XRECORD parser; preserve raw records for downstream consumers |
 | DIMASSOC | Missing | `src/handlers/objects.ts` | Add DIMASSOC parse with safe unresolved references; add fixture-based test |
-| IMAGEDEF / IMAGEDEF_REACTOR | Missing | `src/handlers/objects.ts` | Parse enough to resolve IMAGE entity references; do not crash if external files missing |
+| IMAGEDEF / IMAGEDEF_REACTOR | Implemented | `src/handlers/objects.ts` | Parse enough to resolve IMAGE entity references; do not crash if external files missing |
+| UNDERLAYDEFINITION | Implemented | `src/handlers/objects.ts` | Parse enough to resolve DWFUNDERLAY/DGNUNDERLAY references; do not crash if external files missing |
 | FIELD | Missing | `src/handlers/objects.ts` | Parse as raw text/value pairs; do not attempt full evaluation initially |
 | TABLESTYLE | Missing | `src/handlers/objects.ts` | Parse style basics; used later for TABLE entity rendering |
 | GROUP | Missing | `src/handlers/objects.ts` | Parse group membership; safe ignore if not used |
@@ -447,10 +461,10 @@ This appendix provides an explicit sequence of PRs. The intent is to keep each P
 
 ### B.1 Recommended order (high value first)
 
-- **Stabilize existing behavior**: PR B1.1 (POLYLINE/VERTEX/SEQEND sequencing), PR B1.2 (block basepoint for TEXT/MTEXT/DIMENSION).
-- **Unblock references and metadata**: PR B1.3 (OBJECTS dispatch + DICTIONARY), PR B1.4 (XRECORD).
-- **Enable images/underlays**: PR B1.5 (IMAGEDEF / IMAGEDEF_REACTOR), PR B1.6 (IMAGE entity), PR B1.7 (UNDERLAY defs + UNDERLAY entity).
-- **Add remaining common 2D annotation**: PR B1.8 (LEADER), PR B1.9 (TOLERANCE), PR B1.10 (DIMASSOC), PR B1.11 (MLEADER).
+- **Stabilize existing behavior**: ✅ PR B1.1 (POLYLINE/VERTEX/SEQEND sequencing), ✅ PR B1.2 (block basepoint for TEXT/MTEXT/DIMENSION).
+- **Unblock references and metadata**: ✅ PR B1.3 (OBJECTS dispatch + DICTIONARY), ✅ PR B1.4 (XRECORD).
+- **Enable images/underlays**: ✅ PR B1.5 (IMAGEDEF / IMAGEDEF_REACTOR), ✅ PR B1.6 (IMAGE entity), ✅ PR B1.7 (UNDERLAY defs + UNDERLAY entity).
+- **Add remaining common 2D annotation**: ✅ PR B1.8 (LEADER), ✅ PR B1.9 (TOLERANCE), PR B1.10 (DIMASSOC), PR B1.11 (MLEADER).
 
 ### B.2 PR templates by feature type
 
