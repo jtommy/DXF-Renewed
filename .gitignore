@@ -26,8 +26,5 @@ test-results/
 playwright-report/
 blob-report/
 
-# Rendered screenshots (generated artifacts)
-test/rendered/*.png
-
 # Editor settings
 .vscode/
