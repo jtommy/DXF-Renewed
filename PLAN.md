@@ -9,6 +9,7 @@ This document describes a phased plan to align this project’s DXF parsing beha
 - Provide complete 2D coverage for geometry + annotation features typically found in 2D drawings.
 - Keep backwards compatibility with existing API outputs (`parseString`, `toSVG`, `toPolylines`) where feasible.
 - Grow test coverage using real DXF fixtures and regression tests.
+- Run final SVG rendering integration tests in a real browser and save PNG artifacts for manual review.
 
 ## Non-goals
 
