@@ -1,0 +1,66 @@
+  0
+SECTION
+  2
+HEADER
+  0
+ENDSEC
+  0
+SECTION
+  2
+TABLES
+  0
+ENDSEC
+  0
+SECTION
+  2
+BLOCKS
+  0
+ENDSEC
+  0
+SECTION
+  2
+ENTITIES
+  0
+LEADER
+  5
+LA
+  8
+0
+100
+AcDbLeader
+  3
+Standard
+ 71
+1
+ 72
+0
+ 73
+3
+ 74
+0
+ 75
+0
+ 76
+2
+ 10
+0
+ 20
+0
+ 30
+0
+ 10
+100
+ 20
+0
+ 30
+0
+210
+0
+220
+0
+230
+1
+  0
+ENDSEC
+  0
+EOF

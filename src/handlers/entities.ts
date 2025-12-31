@@ -7,10 +7,14 @@ import arc from './entity/arc'
 import attdef from './entity/attdef'
 import attrib from './entity/attrib'
 import circle from './entity/circle'
+import dgnUnderlay from './entity/dgnUnderlay'
 import dimension from './entity/dimension'
+import dwfUnderlay from './entity/dwfUnderlay'
 import ellipse from './entity/ellipse'
 import hatch from './entity/hatch'
+import image from './entity/image'
 import insert from './entity/insert'
+import leader from './entity/leader'
 import line from './entity/line'
 import lwpolyline from './entity/lwpolyline'
 import mtext from './entity/mtext'
@@ -21,6 +25,7 @@ import solid from './entity/solid'
 import spline from './entity/spline'
 import text from './entity/text'
 import threeDFace from './entity/threeDFace'
+import tolerance from './entity/tolerance'
 import vertex from './entity/vertex'
 import viewport from './entity/viewport'
 
@@ -41,7 +46,12 @@ const handlers: Record<string, EntityHandler> = [
   spline,
   solid,
   hatch,
+  image,
+  leader,
+  dwfUnderlay,
+  dgnUnderlay,
   mtext,
+  tolerance,
   attdef,
   attrib,
   text,

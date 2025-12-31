@@ -1,0 +1,78 @@
+  0
+SECTION
+  2
+HEADER
+  0
+ENDSEC
+  0
+SECTION
+  2
+TABLES
+  0
+ENDSEC
+  0
+SECTION
+  2
+BLOCKS
+  0
+ENDSEC
+  0
+SECTION
+  2
+ENTITIES
+  0
+DWFUNDERLAY
+  5
+UA
+  8
+0
+100
+AcDbUnderlayReference
+340
+UD
+ 10
+10
+ 20
+20
+ 30
+0
+ 41
+1
+ 42
+1
+ 43
+1
+ 50
+0
+210
+0
+220
+0
+230
+1
+280
+2
+281
+50
+282
+0
+  0
+ENDSEC
+  0
+SECTION
+  2
+OBJECTS
+  0
+UNDERLAYDEFINITION
+  5
+UD
+100
+AcDbUnderlayDefinition
+  1
+file.dwf
+  2
+Sheet1
+  0
+ENDSEC
+  0
+EOF

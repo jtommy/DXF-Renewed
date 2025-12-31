@@ -1,0 +1,96 @@
+  0
+SECTION
+  2
+HEADER
+  0
+ENDSEC
+  0
+SECTION
+  2
+TABLES
+  0
+ENDSEC
+  0
+SECTION
+  2
+BLOCKS
+  0
+ENDSEC
+  0
+SECTION
+  2
+ENTITIES
+  0
+IMAGE
+  5
+FF
+  8
+0
+100
+AcDbRasterImage
+ 90
+0
+ 10
+1
+ 20
+2
+ 30
+0
+ 11
+1
+ 21
+0
+ 31
+0
+ 12
+0
+ 22
+1
+ 32
+0
+ 13
+640
+ 23
+480
+340
+AD
+360
+AE
+ 70
+1
+280
+0
+  0
+ENDSEC
+  0
+SECTION
+  2
+OBJECTS
+  0
+IMAGEDEF
+  5
+AD
+100
+AcDbRasterImageDef
+ 90
+0
+  1
+my.png
+ 10
+640
+ 20
+480
+  0
+IMAGEDEF_REACTOR
+  5
+AE
+100
+AcDbRasterImageDefReactor
+ 90
+2
+330
+FF
+  0
+ENDSEC
+  0
+EOF

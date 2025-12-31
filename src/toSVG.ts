@@ -16,10 +16,12 @@ import type {
   DimensionEntity,
   EllipseEntity,
   Entity,
+  LeaderEntity,
   MTextEntity,
   ParsedDXF,
   SplineEntity,
   TextEntity,
+  ToleranceEntity,
 } from './types'
 import type { BoundsAndElement } from './types/svg'
 
@@ -86,6 +88,26 @@ const lwpolyline = (entity: Entity): BoundsAndElement => {
   return transformBoundingBoxAndElement(
     bbox,
     element,
+    entity.transforms ?? [],
+  )
+}
+
+const leader = (entity: LeaderEntity): BoundsAndElement | null => {
+  if (!entity.vertices || entity.vertices.length < 2) return null
+
+  const bbox0 = entity.vertices.reduce(
+    (acc, p) => acc.expandByPoint({ x: p.x, y: p.y }),
+    new Box2(),
+  )
+  const d = entity.vertices.reduce((acc, p, i) => {
+    acc += i === 0 ? 'M' : 'L'
+    acc += p.x + ',' + p.y
+    return acc
+  }, '')
+
+  return transformBoundingBoxAndElement(
+    bbox0,
+    `<path d="${d}" />`,
     entity.transforms ?? [],
   )
 }
@@ -311,7 +333,7 @@ const text = (entity: TextEntity): BoundsAndElement => {
     .expandByPoint({ x: x + textWidth, y: y + height })
 
   const rotationDegrees = (rotation * 180) / Math.PI
-  const element0 = `<text x="${x}" y="${y}" font-size="${height}" transform="rotate(${-rotationDegrees} ${x} ${y}) scale(1,-1) translate(0 ${-2 * y})">${content}</text>`
+    const element0 = `<text x="${x}" y="${y}" font-size="${height}" transform="rotate(${-rotationDegrees} ${x} ${y}) scale(1,-1) translate(0 ${-2 * y})">${content}</text>`
 
   const { bbox, element } = addFlipXIfApplicable(entity, {
     bbox: bbox0,
@@ -340,6 +362,35 @@ const mtext = (entity: MTextEntity): BoundsAndElement => {
     ? Math.atan2(entity.xAxisY, entity.xAxisX)
     : 0
   const rotationDegrees = (rotation * 180) / Math.PI
+
+  const element0 = `<text x="${x}" y="${y}" font-size="${height}" transform="rotate(${-rotationDegrees} ${x} ${y}) scale(1,-1) translate(0 ${-2 * y})">${content}</text>`
+
+  const { bbox, element } = addFlipXIfApplicable(entity, {
+    bbox: bbox0,
+    element: element0,
+  })
+  return transformBoundingBoxAndElement(bbox, element, entity.transforms ?? [])
+}
+
+/**
+ * Minimal <text /> fallback for TOLERANCE entities.
+ * DXF uses special control codes; we preserve the raw string.
+ */
+const tolerance = (entity: ToleranceEntity): BoundsAndElement => {
+  const x = entity.insertionPoint?.x ?? 0
+  const y = entity.insertionPoint?.y ?? 0
+  const height = 1
+  const content = entity.text ?? ''
+
+  const rotation = entity.xAxisDirection
+    ? Math.atan2(entity.xAxisDirection.y, entity.xAxisDirection.x)
+    : 0
+  const rotationDegrees = (rotation * 180) / Math.PI
+
+  const textWidth = content.length * height * 0.6
+  const bbox0 = new Box2()
+    .expandByPoint({ x, y })
+    .expandByPoint({ x: x + textWidth, y: y + height })
 
   const element0 = `<text x="${x}" y="${y}" font-size="${height}" transform="rotate(${-rotationDegrees} ${x} ${y}) scale(1,-1) translate(0 ${-2 * y})">${content}</text>`
 
@@ -453,6 +504,12 @@ const entityToBoundsAndElement = (
     }
     case 'LWPOLYLINE': {
       return lwpolyline(entity)
+    }
+    case 'LEADER': {
+      return leader(entity as LeaderEntity)
+    }
+    case 'TOLERANCE': {
+      return tolerance(entity as ToleranceEntity)
     }
     default:
       logger.warn('entity type not supported in SVG rendering:', entity.type)
