@@ -15,6 +15,8 @@ interface DimensionEntity {
   type: typeof TYPE
   block?: string
   start: Point3D
+  angleVertex?: Point3D
+  arcPoint?: Point3D
   textMidpoint: Point3D
   measureStart: Point3D
   measureEnd: Point3D
@@ -88,6 +90,30 @@ export const process = (tuples: DXFTuple[]): DimensionEntity => {
           break
         case 34:
           entity.measureEnd.z = value as number
+          break
+        case 15:
+          entity.angleVertex = entity.angleVertex || { x: 0, y: 0, z: 0 }
+          entity.angleVertex.x = value as number
+          break
+        case 25:
+          entity.angleVertex = entity.angleVertex || { x: 0, y: 0, z: 0 }
+          entity.angleVertex.y = value as number
+          break
+        case 35:
+          entity.angleVertex = entity.angleVertex || { x: 0, y: 0, z: 0 }
+          entity.angleVertex.z = value as number
+          break
+        case 16:
+          entity.arcPoint = entity.arcPoint || { x: 0, y: 0, z: 0 }
+          entity.arcPoint.x = value as number
+          break
+        case 26:
+          entity.arcPoint = entity.arcPoint || { x: 0, y: 0, z: 0 }
+          entity.arcPoint.y = value as number
+          break
+        case 36:
+          entity.arcPoint = entity.arcPoint || { x: 0, y: 0, z: 0 }
+          entity.arcPoint.z = value as number
           break
         case 50:
           entity.rotation = value as number
@@ -177,7 +203,7 @@ function parseBitCombinationsFromValue(value: number): BitCombinationsResult {
   let ordinateType = false
   let userDefinedLocation = false
 
-  // ToDo: Solve in some more clever way??
+  // Note: keep this logic explicit; DXF stores flags as bit combinations.
   if (value > 6) {
     const alt1 = value - 32
     const alt2 = value - 64
