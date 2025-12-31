@@ -1,6 +1,7 @@
 // DXF Tables parsing types
 
 import type { Point2D, Point3D } from './common'
+import type { DXFTuple } from './dxf'
 
 /**
  * Partial point for parsing (all coordinates optional)
@@ -408,7 +409,90 @@ export interface DimStyleInternal {
 /**
  * DXF Objects section result
  */
+export interface DictionaryObject {
+  type: 'DICTIONARY'
+  handle?: string | number
+  ownerHandle?: string | number
+  entries: Record<string, string>
+}
+
+export interface XRecordObject {
+  type: 'XRECORD'
+  handle?: string | number
+  ownerHandle?: string | number
+
+  /** Raw tuples for downstream consumers (excluding the initial 0/XRECORD tuple). */
+  tuples: DXFTuple[]
+}
+
+export interface ImageDefObject {
+  type: 'IMAGEDEF'
+  handle?: string | number
+
+  /** Soft-pointer ID/handle to the ACAD_IMAGE_dict dictionary (when present). */
+  ownerHandle?: string | number
+
+  /** File name of the referenced image. */
+  fileName?: string
+
+  /** Image size in pixels (when available). */
+  pixelSizeX?: number
+  pixelSizeY?: number
+
+  /** Raw tuples for downstream consumers (excluding the initial 0/IMAGEDEF tuple). */
+  tuples: DXFTuple[]
+}
+
+export interface ImageDefReactorObject {
+  type: 'IMAGEDEF_REACTOR'
+  handle?: string | number
+
+  /** Object ID/handle for the associated IMAGE entity (when present). */
+  imageHandle?: string | number
+
+  /** Raw tuples for downstream consumers (excluding the initial 0/IMAGEDEF_REACTOR tuple). */
+  tuples: DXFTuple[]
+}
+
+export type UnderlayDefinitionObjectType =
+  | 'UNDERLAYDEFINITION'
+  | 'PDFDEFINITION'
+  | 'DWFDEFINITION'
+  | 'DGNDEFINITION'
+
+export interface UnderlayDefinitionObject {
+  type: UnderlayDefinitionObjectType
+  handle?: string | number
+
+  /** Soft-pointer ID/handle to the owning dictionary (when present). */
+  ownerHandle?: string | number
+
+  /** File name or path of the referenced underlay. */
+  fileName?: string
+
+  /** Underlay name within the file (e.g., sheet name). */
+  underlayName?: string
+
+  /** Raw tuples for downstream consumers (excluding the initial 0/<TYPE> tuple). */
+  tuples: DXFTuple[]
+}
+
 export interface ParsedObjects {
   /** Layout objects */
   layouts: LayoutInternal[]
+
+  /** DICTIONARY objects keyed by handle */
+  dictionaries?: Record<string, DictionaryObject>
+
+  /** XRECORD objects keyed by handle */
+  xRecords?: Record<string, XRecordObject>
+
+  /** IMAGEDEF objects keyed by handle */
+  imageDefs?: Record<string, ImageDefObject>
+
+  /** IMAGEDEF_REACTOR objects keyed by handle */
+  imageDefReactors?: Record<string, ImageDefReactorObject>
+
+  /** UNDERLAYDEFINITION objects keyed by handle */
+  underlayDefinitions?: Record<string, UnderlayDefinitionObject>
 }

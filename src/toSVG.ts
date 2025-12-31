@@ -1,9 +1,10 @@
 import { Box2 } from 'vecks'
 
 import denormalise from './denormalise'
-import dimensionToSVG from './dimensionToSVG'
+import dimensionToSVG, { getDimensionGeometryBBox } from './dimensionToSVG'
 import entityToPolyline from './entityToPolyline'
 import getRGBForEntity from './getRGBForEntity'
+import escapeXmlText from './util/escapeXmlText'
 import logger from './util/logger'
 import rgbToColorAttribute from './util/rgbToColorAttribute'
 import rotate from './util/rotate'
@@ -16,10 +17,13 @@ import type {
   DimensionEntity,
   EllipseEntity,
   Entity,
+  LeaderEntity,
   MTextEntity,
   ParsedDXF,
   SplineEntity,
   TextEntity,
+  ToleranceEntity,
+  ToSVGOptions,
 } from './types'
 import type { BoundsAndElement } from './types/svg'
 
@@ -86,6 +90,26 @@ const lwpolyline = (entity: Entity): BoundsAndElement => {
   return transformBoundingBoxAndElement(
     bbox,
     element,
+    entity.transforms ?? [],
+  )
+}
+
+const leader = (entity: LeaderEntity): BoundsAndElement | null => {
+  if (!entity.vertices || entity.vertices.length < 2) return null
+
+  const bbox0 = entity.vertices.reduce(
+    (acc, p) => acc.expandByPoint({ x: p.x, y: p.y }),
+    new Box2(),
+  )
+  const d = entity.vertices.reduce((acc, p, i) => {
+    acc += i === 0 ? 'M' : 'L'
+    acc += p.x + ',' + p.y
+    return acc
+  }, '')
+
+  return transformBoundingBoxAndElement(
+    bbox0,
+    `<path d="${d}" />`,
     entity.transforms ?? [],
   )
 }
@@ -311,7 +335,7 @@ const text = (entity: TextEntity): BoundsAndElement => {
     .expandByPoint({ x: x + textWidth, y: y + height })
 
   const rotationDegrees = (rotation * 180) / Math.PI
-  const element0 = `<text x="${x}" y="${y}" font-size="${height}" transform="rotate(${-rotationDegrees} ${x} ${y}) scale(1,-1) translate(0 ${-2 * y})">${content}</text>`
+  const element0 = `<text x="${x}" y="${y}" font-size="${height}" transform="rotate(${-rotationDegrees} ${x} ${y}) scale(1,-1) translate(0 ${-2 * y})">${escapeXmlText(content)}</text>`
 
   const { bbox, element } = addFlipXIfApplicable(entity, {
     bbox: bbox0,
@@ -340,8 +364,36 @@ const mtext = (entity: MTextEntity): BoundsAndElement => {
     ? Math.atan2(entity.xAxisY, entity.xAxisX)
     : 0
   const rotationDegrees = (rotation * 180) / Math.PI
+  const element0 = `<text x="${x}" y="${y}" font-size="${height}" transform="rotate(${-rotationDegrees} ${x} ${y}) scale(1,-1) translate(0 ${-2 * y})">${escapeXmlText(content)}</text>`
 
-  const element0 = `<text x="${x}" y="${y}" font-size="${height}" transform="rotate(${-rotationDegrees} ${x} ${y}) scale(1,-1) translate(0 ${-2 * y})">${content}</text>`
+  const { bbox, element } = addFlipXIfApplicable(entity, {
+    bbox: bbox0,
+    element: element0,
+  })
+  return transformBoundingBoxAndElement(bbox, element, entity.transforms ?? [])
+}
+
+/**
+ * Minimal <text /> fallback for TOLERANCE entities.
+ * DXF uses special control codes; we preserve the raw string.
+ */
+const tolerance = (entity: ToleranceEntity): BoundsAndElement => {
+  const x = entity.insertionPoint?.x ?? 0
+  const y = entity.insertionPoint?.y ?? 0
+  const height = 1
+  const content = entity.text ?? ''
+
+  const rotation = entity.xAxisDirection
+    ? Math.atan2(entity.xAxisDirection.y, entity.xAxisDirection.x)
+    : 0
+  const rotationDegrees = (rotation * 180) / Math.PI
+
+  const textWidth = content.length * height * 0.6
+  const bbox0 = new Box2()
+    .expandByPoint({ x, y })
+    .expandByPoint({ x: x + textWidth, y: y + height })
+
+  const element0 = `<text x="${x}" y="${y}" font-size="${height}" transform="rotate(${-rotationDegrees} ${x} ${y}) scale(1,-1) translate(0 ${-2 * y})">${escapeXmlText(content)}</text>`
 
   const { bbox, element } = addFlipXIfApplicable(entity, {
     bbox: bbox0,
@@ -356,8 +408,10 @@ const mtext = (entity: MTextEntity): BoundsAndElement => {
 const dimension = (
   entity: DimensionEntity,
   dimStyle?: any,
+  options?: ToSVGOptions,
+  viewport?: { width: number; height: number },
 ): BoundsAndElement => {
-  const result = dimensionToSVG(entity, dimStyle)
+  const result = dimensionToSVG(entity, dimStyle, options, viewport)
   return transformBoundingBoxAndElement(
     result.bbox,
     result.element,
@@ -410,6 +464,8 @@ const bezier = (entity: SplineEntity): BoundsAndElement => {
 const entityToBoundsAndElement = (
   entity: Entity,
   dimStyles?: { [name: string]: any },
+  options?: ToSVGOptions,
+  viewport?: { width: number; height: number },
 ): BoundsAndElement | null => {
   switch (entity.type) {
     case 'CIRCLE':
@@ -430,7 +486,7 @@ const entityToBoundsAndElement = (
       const dimStyle = styleName && dimStyles
         ? dimStyles[styleName]
         : undefined
-      return dimension(dimEntity, dimStyle)
+      return dimension(dimEntity, dimStyle, options, viewport)
     }
     case 'SPLINE': {
       const splineEntity = entity as SplineEntity
@@ -454,22 +510,57 @@ const entityToBoundsAndElement = (
     case 'LWPOLYLINE': {
       return lwpolyline(entity)
     }
+    case 'LEADER': {
+      return leader(entity as LeaderEntity)
+    }
+    case 'TOLERANCE': {
+      return tolerance(entity as ToleranceEntity)
+    }
     default:
       logger.warn('entity type not supported in SVG rendering:', entity.type)
       return null
   }
 }
 
-export default function toSVG(parsed: ParsedDXF): string {
+export default function toSVG(parsed: ParsedDXF, options: ToSVGOptions = {}): string {
   const entities = denormalise(parsed)
   const dimStyles = parsed.tables.dimStyles
+
+  const geometryBBox = entities.reduce((acc: Box2, entity: Entity): Box2 => {
+    if (entity.type === 'DIMENSION') {
+      const bbox = getDimensionGeometryBBox(entity as DimensionEntity)
+      if (bbox.valid) {
+        acc.expandByPoint(bbox.min)
+        acc.expandByPoint(bbox.max)
+      }
+      return acc
+    }
+
+    const boundsAndElement = entityToBoundsAndElement(entity, dimStyles, options)
+    if (boundsAndElement?.bbox.valid) {
+      acc.expandByPoint(boundsAndElement.bbox.min)
+      acc.expandByPoint(boundsAndElement.bbox.max)
+    }
+    return acc
+  }, new Box2())
+
+  const viewport = geometryBBox.valid
+    ? {
+        width: geometryBBox.max.x - geometryBBox.min.x,
+        height: geometryBBox.max.y - geometryBBox.min.y,
+      }
+    : {
+        width: 0,
+        height: 0,
+      }
+
   const { bbox, elements } = entities.reduce(
     (
       acc: { bbox: Box2; elements: string[] },
       entity: Entity,
     ): { bbox: Box2; elements: string[] } => {
       const rgb = getRGBForEntity(parsed.tables.layers, entity)
-      const boundsAndElement = entityToBoundsAndElement(entity, dimStyles)
+      const boundsAndElement = entityToBoundsAndElement(entity, dimStyles, options, viewport)
       // Ignore entities that don't produce SVG elements or have unsupported types
       if (boundsAndElement) {
         const { bbox, element } = boundsAndElement

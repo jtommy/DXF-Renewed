@@ -1,9 +1,9 @@
-import { getResourcePath } from './test-helpers.js'
-import fs from 'fs'
 import expectModule from 'expect'
+import fs from 'fs'
+import { getResourcePath } from './test-helpers.js'
 const expect = expectModule.expect || expectModule.default
 
-import { parseString, denormalise, groupEntitiesByLayer } from '../../src'
+import { denormalise, groupEntitiesByLayer, parseString } from '../../src'
 
 describe('Group entities', () => {
   it('by layer', () => {
@@ -38,7 +38,7 @@ describe('Group entities', () => {
       return byLayer[layer].length
     })
     expect(layerEntityCounts).toEqual([
-      4, 183, 31, 131, 52, 177, 199, 159, 1, 26, 87, 27, 8, 5, 1, 3, 2, 1,
+      4, 183, 31, 137, 52, 177, 199, 159, 1, 26, 87, 27, 8, 5, 1, 3, 2, 1,
     ])
   })
 })

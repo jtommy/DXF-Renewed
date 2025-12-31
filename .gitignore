@@ -9,6 +9,9 @@ examples/example.es6.svg
 #*
 .idea
 
+# Local Python tooling (ezdxf)
+.venv-ezdxf/
+
 # Yarn 4
 .yarn/*
 !.yarn/patches
@@ -17,3 +20,11 @@ examples/example.es6.svg
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
+
+# Playwright (generated artifacts)
+test-results/
+playwright-report/
+blob-report/
+
+# Editor settings
+.vscode/

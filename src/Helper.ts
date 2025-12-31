@@ -5,7 +5,7 @@ import toPolylines from './toPolylines'
 import toSVG from './toSVG'
 import logger from './util/logger'
 
-import type { Entity, LayerGroups, ParsedDXF } from './types'
+import type { Entity, LayerGroups, ParsedDXF, ToSVGOptions } from './types'
 
 export default class Helper {
   private readonly _contents: string
@@ -61,8 +61,8 @@ export default class Helper {
     return this._groups as LayerGroups
   }
 
-  toSVG(): string {
-    return toSVG(this.parsed)
+  toSVG(options?: ToSVGOptions): string {
+    return toSVG(this.parsed, options)
   }
 
   toPolylines(): ReturnType<typeof toPolylines> {
