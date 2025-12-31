@@ -38,6 +38,7 @@
     "test:integration:node": "mocha --require tsx --recursive test/integration/** --extensions .ts,.js",
     "test:integration:browser": "yarn dist && playwright test -c playwright.config.cjs",
     "test:unit:watch": "npm run test:unit -- --watch",
+    "validate:fixtures": "bash -lc 'if [ -x ./.venv-ezdxf/bin/python ]; then ./.venv-ezdxf/bin/python tools/ezdxf_validate_fixtures.py --fail-on-audit-errors; else python3 tools/ezdxf_validate_fixtures.py --fail-on-audit-errors; fi'",
     "prepare": "husky",
     "semantic-release": "semantic-release",
     "commit": "git-cz"
