@@ -3,20 +3,20 @@ import cloneDeep from 'lodash/cloneDeep'
 import logger from './util/logger'
 
 import type {
-  ArcEntity,
-  Block,
-  CircleEntity,
-  DimensionEntity,
-  EllipseEntity,
-  Entity,
-  InsertEntity,
-  LineEntity,
-  MTextEntity,
-  ParsedDXF,
-  PolylineEntity,
-  SplineEntity,
-  TextEntity,
-  Transform,
+    ArcEntity,
+    Block,
+    CircleEntity,
+    DimensionEntity,
+    EllipseEntity,
+    Entity,
+    InsertEntity,
+    LineEntity,
+    MTextEntity,
+    ParsedDXF,
+    PolylineEntity,
+    SplineEntity,
+    TextEntity,
+    Transform,
 } from './types'
 
 type BlockBasePointAdjuster = (entity: Entity, block: Block) => void
