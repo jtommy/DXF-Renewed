@@ -24,7 +24,7 @@ Written in **TypeScript** with full type definitions included. Uses modern ES201
 - 🎯 Full TypeScript codebase with strict type checking
 - ⚡ Built with esbuild (96% faster than Babel - 18ms vs 447ms)
 - 📦 Modular type system with 22+ separate type files
-- ✅ 100% test coverage maintained (85 tests passing)
+- ✅ Extensive unit tests and browser integration tests
 - 🎨 Enhanced SVG rendering with TEXT, MTEXT, and DIMENSION support
 - 📚 Comprehensive type definitions for all DXF entities
 
@@ -148,6 +148,34 @@ Here's an example you will find in the functional test output:
 
 ![svg example image](https://cloud.githubusercontent.com/assets/57994/17583566/e00f5d78-5fb1-11e6-9030-55686f980e6f.png)
 
+### DIMENSION auto-scaling
+
+DIMENSION rendering supports viewport-based auto-scaling so that arrows and text remain readable across different coordinate scales.
+
+```ts
+import { Helper } from '@linkiez/dxf-renew'
+
+const helper = new Helper(dxfString)
+
+const svg = helper.toSVG({
+  dimension: {
+    autoScale: true,
+    // Reference used when percentages are not provided.
+    autoScaleViewportReference: 40,
+    // Optional per-element overrides as a percentage (0..100)
+    // of min(viewBoxWidth, viewBoxHeight).
+    autoScaleViewportPercentages: {
+      arrowSize: 1.5,
+      textHeight: 1
+    }
+  }
+})
+```
+
+When `autoScaleViewportPercentages` is provided (and `autoScale` is enabled), the final size for each configured element is computed as:
+
+`size = min(viewBoxWidth, viewBoxHeight) * (percent / 100)`
+
 ## Interpolation
 
 The library supports outputting DXFs as interpolated polylines for custom rendering (e.g. WebGL) or other applications:
@@ -188,6 +216,14 @@ Running the unit tests:
 ```bash
 yarn test
 ```
+
+Running the browser integration tests (Playwright):
+
+```bash
+yarn test:integration:browser
+```
+
+These tests render fixtures in a real browser and write deterministic PNG screenshots under `test/rendered/` (overwritten on each run).
 
 Running the functional tests in a browser:
 

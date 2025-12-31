@@ -2,7 +2,9 @@
 
 ## Overview
 
-The `DIMENSION` entity has been fully implemented with complete support for the `DIMSTYLE` system, including parsing, storage, and SVG rendering of all 6 DXF dimension types.
+The `DIMENSION` entity is implemented with support for the `DIMSTYLE` system, including parsing, storage, and SVG rendering.
+
+SVG rendering supports DXF dimension types 0/1/2/3/4/5/6.
 
 ## Implementation Status
 
@@ -45,7 +47,7 @@ The `DIMENSION` entity has been fully implemented with complete support for the 
 
 ### ✅ Phase 3: Advanced Rendering (100%)
 
-All 6 dimension types implemented with precise geometry:
+Dimension types implemented with precise geometry:
 
 #### 1. Linear Dimension (types 0 and 1)
 
@@ -91,6 +93,8 @@ All 6 dimension types implemented with precise geometry:
 * Text only at textMidpoint position
 * File: `renderFallbackDimension()`
 
+
+
 ### ✅ Phase 4: Colors and Refinements (100%)
 
 #### DIMSTYLE Colors (100%)
@@ -111,19 +115,21 @@ Implementation:
 
 #### Optional Features (Not Implemented)
 
-**Custom Arrow Blocks (⏸️ Low Priority)**
+##### Custom Arrow Blocks (⏸️ Low Priority)
 
 * DIMBLK, DIMBLK1, DIMBLK2 parsed and available
 * Requires complex integration with INSERT renderer
 * Fallback to standard triangular arrows works in most cases
 
-**Tolerances and Alternate Units (⏸️ Low Priority)**
+
+##### Tolerances and Alternate Units (⏸️ Low Priority)
 
 * DIMTOL, DIMALT and related properties parsed
 * Requires complex multi-line text formatting
 * Simple text sufficient for most cases
 
-**XDATA Overrides (⏸️ Rare Edge Case)**
+
+##### XDATA Overrides (⏸️ Rare Edge Case)
 
 * Per-entity DIMSTYLE property overrides via XDATA
 * Not implemented

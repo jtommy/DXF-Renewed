@@ -242,6 +242,8 @@ There is already substantial fixture coverage in `test/resources/*.dxf` and unit
 
 - Rendering tests exist for `toSVG`, `toPolylines`, dimension/text, blocks/inserts, and hatches.
 - Use this existing corpus to gate each milestone; add only minimal new fixtures per newly-supported feature.
+- When fixtures become too complex, brittle, or hard to assert against, it is acceptable to replace them with simpler, targeted fixtures (including ezdxf-generated ones) as long as the test still covers the intended behavior.
+- After adding or regenerating fixtures, run `yarn validate:fixtures` to ensure DXF structure is sound.
 
 ## Milestones
 
@@ -256,6 +258,9 @@ There is already substantial fixture coverage in `test/resources/*.dxf` and unit
 - PR 0.1: Add/confirm one “golden” unit test per public API (`parseString`, `toPolylines`, `toSVG`).
 - PR 0.2: Add a test-only strict mode helper (e.g., fail on unknown entity/table/object types) without changing the runtime default behavior.
 - PR 0.3: Add 1–3 new fixtures only if existing fixtures don’t cover a targeted feature.
+- PR 0.3: Add 1–3 new fixtures only if existing fixtures don’t cover a targeted feature.
+  - If a fixture is too complex for stable assertions, prefer a smaller, focused fixture generated via ezdxf.
+  - It is OK to replace or simplify existing fixtures if they remain representative of the behavior under test.
 
 - Add/confirm a single “golden” pipeline test per API surface:
   - `parseString()` parses representative DXFs without throwing.
