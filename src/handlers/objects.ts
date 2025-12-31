@@ -232,13 +232,22 @@ function parseImageDefReactorObject(group: ObjectGroup): ImageDefReactorObject |
   return reactor
 }
 
+const UNDERLAY_DEFINITION_OBJECT_TYPES = new Set([
+  'UNDERLAYDEFINITION',
+  'PDFDEFINITION',
+  'DWFDEFINITION',
+  'DGNDEFINITION',
+])
+
 function parseUnderlayDefinitionObject(group: ObjectGroup): UnderlayDefinitionObject | undefined {
-  if (group[0]?.[1] !== 'UNDERLAYDEFINITION') return undefined
+  const objectType = group[0]?.[1]
+  if (typeof objectType !== 'string') return undefined
+  if (!UNDERLAY_DEFINITION_OBJECT_TYPES.has(objectType)) return undefined
 
   const tuples = group.slice(1)
 
   const def: UnderlayDefinitionObject = {
-    type: 'UNDERLAYDEFINITION',
+    type: objectType as UnderlayDefinitionObject['type'],
     tuples,
   }
 
@@ -287,6 +296,21 @@ const OBJECT_GROUP_HANDLERS: Record<string, ObjectGroupHandler> = {
     const handle = def?.handle ? String(def.handle) : undefined
     if (def && handle) objects.underlayDefinitions![handle] = def
   },
+  PDFDEFINITION: (objects, group) => {
+    const def = parseUnderlayDefinitionObject(group)
+    const handle = def?.handle ? String(def.handle) : undefined
+    if (def && handle) objects.underlayDefinitions![handle] = def
+  },
+  DWFDEFINITION: (objects, group) => {
+    const def = parseUnderlayDefinitionObject(group)
+    const handle = def?.handle ? String(def.handle) : undefined
+    if (def && handle) objects.underlayDefinitions![handle] = def
+  },
+  DGNDEFINITION: (objects, group) => {
+    const def = parseUnderlayDefinitionObject(group)
+    const handle = def?.handle ? String(def.handle) : undefined
+    if (def && handle) objects.underlayDefinitions![handle] = def
+  },
 }
 
 export default function parseObjects(tuples: DXFTuple[]): ParsedObjects {
@@ -302,7 +326,7 @@ export default function parseObjects(tuples: DXFTuple[]): ParsedObjects {
   const groups = groupObjectsByZero(tuples)
   for (const group of groups) {
     const objectType = group[0]?.[1]
-    if (!objectType) continue
+    if (typeof objectType !== 'string') continue
 
     const handler = OBJECT_GROUP_HANDLERS[objectType]
     if (handler) handler(objects, group)

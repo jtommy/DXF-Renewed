@@ -1,4 +1,4 @@
-// UNDERLAY entity types (DWFUNDERLAY / DGNUNDERLAY)
+// UNDERLAY entity types (DWFUNDERLAY / DGNUNDERLAY / PDFUNDERLAY)
 
 import type { BaseEntity } from './base-entity'
 import type { Point3D } from './common'
@@ -28,4 +28,8 @@ export interface DwfUnderlayEntity extends UnderlayReferenceEntityBase {
 
 export interface DgnUnderlayEntity extends UnderlayReferenceEntityBase {
   type: 'DGNUNDERLAY'
+}
+
+export interface PdfUnderlayEntity extends UnderlayReferenceEntityBase {
+  type: 'PDFUNDERLAY'
 }

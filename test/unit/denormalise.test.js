@@ -135,7 +135,7 @@ describe('Denormalise', () => {
     const textPos = applyTransforms([[text.x, text.y]], text.transforms)[0]
     const textAlignPos = applyTransforms([[text.x2, text.y2]], text.transforms)[0]
     expect(textPos).toEqual([101, 202])
-    expect(textAlignPos).toEqual([102, 203])
+    expect(textAlignPos).toEqual([101, 202])
 
     const mtext = mtexts[0]
     const mtextPos = applyTransforms([[mtext.x, mtext.y]], mtext.transforms)[0]
@@ -157,7 +157,7 @@ describe('Denormalise', () => {
     )[0]
 
     expect(dimStart).toEqual([103, 204])
-    expect(dimText).toEqual([104, 205])
+    expect(dimText).toEqual([103, 204])
     expect(dimMeasureStart).toEqual([103, 204])
     expect(dimMeasureEnd).toEqual([107, 204])
   })

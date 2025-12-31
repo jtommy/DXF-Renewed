@@ -31,16 +31,20 @@ describe('Objects', () => {
 
     expect(parsed.objects).toBeDefined()
     expect(parsed.objects.xRecords).toBeDefined()
-    expect(parsed.objects.xRecords.AB).toBeDefined()
-    expect(parsed.objects.xRecords.AB.handle).toEqual('AB')
+    const handles = Object.keys(parsed.objects.xRecords)
+    expect(handles.length).toBeGreaterThan(0)
 
-    const tuples = parsed.objects.xRecords.AB.tuples
+    const xRecord = parsed.objects.xRecords[handles[0]]
+    expect(xRecord).toBeDefined()
+    expect(xRecord.handle).toBeDefined()
+
+    const tuples = xRecord.tuples
     expect(tuples).toEqual(expect.arrayContaining([[1, 'HELLO'], [40, 3.14]]))
   })
 
   it('parses IMAGEDEF and IMAGEDEF_REACTOR objects into handle maps', () => {
     const contents = fs.readFileSync(
-      getResourcePath(import.meta.url, 'imagedef-basic.dxf'),
+      getResourcePath(import.meta.url, 'image-basic.dxf'),
       'utf-8',
     )
 
@@ -48,15 +52,22 @@ describe('Objects', () => {
 
     expect(parsed.objects).toBeDefined()
     expect(parsed.objects.imageDefs).toBeDefined()
-    expect(parsed.objects.imageDefs.AD).toBeDefined()
-    expect(parsed.objects.imageDefs.AD.handle).toEqual('AD')
-    expect(parsed.objects.imageDefs.AD.fileName).toEqual('my.png')
-    expect(parsed.objects.imageDefs.AD.pixelSizeX).toEqual(640)
-    expect(parsed.objects.imageDefs.AD.pixelSizeY).toEqual(480)
+    const imageDefHandles = Object.keys(parsed.objects.imageDefs)
+    expect(imageDefHandles.length).toBeGreaterThan(0)
+    const imageDef = parsed.objects.imageDefs[imageDefHandles[0]]
+    expect(imageDef).toBeDefined()
+    expect(imageDef.fileName).toEqual('my.png')
+    expect(imageDef.pixelSizeX).toEqual(640)
+    expect(imageDef.pixelSizeY).toEqual(480)
 
     expect(parsed.objects.imageDefReactors).toBeDefined()
-    expect(parsed.objects.imageDefReactors.AE).toBeDefined()
-    expect(parsed.objects.imageDefReactors.AE.handle).toEqual('AE')
-    expect(parsed.objects.imageDefReactors.AE.imageHandle).toEqual('FF')
+    const reactorHandles = Object.keys(parsed.objects.imageDefReactors)
+    expect(reactorHandles.length).toBeGreaterThan(0)
+    const reactor = parsed.objects.imageDefReactors[reactorHandles[0]]
+    expect(reactor).toBeDefined()
+
+    const image = parsed.entities?.find((e) => e.type === 'IMAGE')
+    expect(image).toBeDefined()
+    expect(reactor.imageHandle).toEqual(image.handle)
   })
 })

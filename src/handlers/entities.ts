@@ -10,6 +10,7 @@ import circle from './entity/circle'
 import dgnUnderlay from './entity/dgnUnderlay'
 import dimension from './entity/dimension'
 import dwfUnderlay from './entity/dwfUnderlay'
+import pdfUnderlay from './entity/pdfUnderlay'
 import ellipse from './entity/ellipse'
 import hatch from './entity/hatch'
 import image from './entity/image'
@@ -50,6 +51,7 @@ const handlers: Record<string, EntityHandler> = [
   leader,
   dwfUnderlay,
   dgnUnderlay,
+  pdfUnderlay,
   mtext,
   tolerance,
   attdef,
@@ -84,7 +86,7 @@ class EntityGroupProcessor {
   }
 
   processGroup(tuples: DXFTuple[]): void {
-    const entityType = tuples[0][1]
+    const entityType = String(tuples[0][1])
     const contentTuples = tuples.slice(1)
 
     switch (entityType) {

@@ -454,8 +454,14 @@ export interface ImageDefReactorObject {
   tuples: DXFTuple[]
 }
 
+export type UnderlayDefinitionObjectType =
+  | 'UNDERLAYDEFINITION'
+  | 'PDFDEFINITION'
+  | 'DWFDEFINITION'
+  | 'DGNDEFINITION'
+
 export interface UnderlayDefinitionObject {
-  type: 'UNDERLAYDEFINITION'
+  type: UnderlayDefinitionObjectType
   handle?: string | number
 
   /** Soft-pointer ID/handle to the owning dictionary (when present). */
@@ -467,7 +473,7 @@ export interface UnderlayDefinitionObject {
   /** Underlay name within the file (e.g., sheet name). */
   underlayName?: string
 
-  /** Raw tuples for downstream consumers (excluding the initial 0/UNDERLAYDEFINITION tuple). */
+  /** Raw tuples for downstream consumers (excluding the initial 0/<TYPE> tuple). */
   tuples: DXFTuple[]
 }
 

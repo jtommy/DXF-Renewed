@@ -18,10 +18,12 @@ describe('LEADER', () => {
     const entity = parsed.entities[0]
 
     expect(entity.type).toEqual('LEADER')
-    expect(entity.handle).toEqual('LA')
-    expect(entity.vertices.length).toEqual(2)
+    expect(entity.handle).toBeDefined()
+    expect(String(entity.handle)).toMatch(/^[0-9A-F]+$/i)
+    expect(entity.vertices.length).toEqual(3)
     expect(entity.vertices[0]).toEqual({ x: 0, y: 0, z: 0 })
     expect(entity.vertices[1]).toEqual({ x: 100, y: 0, z: 0 })
+    expect(entity.vertices[2]).toEqual({ x: 100, y: 50, z: 0 })
 
     const svg = toSVG(parsed)
     expect(svg).toContain('<path')

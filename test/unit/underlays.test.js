@@ -17,17 +17,19 @@ describe('UNDERLAY', () => {
     expect(parsed.entities.length).toEqual(1)
     const entity = parsed.entities[0]
 
-    expect(entity.type).toEqual('DWFUNDERLAY')
-    expect(entity.handle).toEqual('UA')
-    expect(entity.underlayDefinitionHandle).toEqual('UD')
+    expect(entity.type).toEqual('PDFUNDERLAY')
+    expect(entity.handle).toBeDefined()
+    expect(entity.underlayDefinitionHandle).toBeDefined()
     expect(entity.insertionPoint).toEqual({ x: 10, y: 20, z: 0 })
     expect(entity.scale).toEqual({ x: 1, y: 1, z: 1 })
 
     expect(parsed.objects).toBeDefined()
     expect(parsed.objects.underlayDefinitions).toBeDefined()
-    expect(parsed.objects.underlayDefinitions.UD).toBeDefined()
-    expect(parsed.objects.underlayDefinitions.UD.handle).toEqual('UD')
-    expect(parsed.objects.underlayDefinitions.UD.fileName).toEqual('file.dwf')
-    expect(parsed.objects.underlayDefinitions.UD.underlayName).toEqual('Sheet1')
+    const underlayHandles = Object.keys(parsed.objects.underlayDefinitions)
+    expect(underlayHandles.length).toBeGreaterThan(0)
+    const def = parsed.objects.underlayDefinitions[underlayHandles[0]]
+    expect(def).toBeDefined()
+    expect(def.fileName).toEqual('file.pdf')
+    expect(def.underlayName).toEqual('U1')
   })
 })

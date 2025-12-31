@@ -17,7 +17,7 @@ import type { SolidEntity } from './solid-entity'
 import type { SplineEntity } from './spline-entity'
 import type { TextEntity } from './text-entity'
 import type { ToleranceEntity } from './tolerance-entity'
-import type { DgnUnderlayEntity, DwfUnderlayEntity } from './underlay-entity'
+import type { DgnUnderlayEntity, DwfUnderlayEntity, PdfUnderlayEntity } from './underlay-entity'
 
 export type Entity =
   | LineEntity
@@ -37,5 +37,6 @@ export type Entity =
   | ToleranceEntity
   | DwfUnderlayEntity
   | DgnUnderlayEntity
+  | PdfUnderlayEntity
   | HatchEntity
   | BaseEntity

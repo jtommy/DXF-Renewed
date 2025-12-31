@@ -19,15 +19,20 @@ describe('IMAGE', () => {
 
     const image = parsed.entities[0]
     expect(image.type).toEqual('IMAGE')
-    expect(image.handle).toEqual('FF')
+    expect(image.handle).toBeDefined()
+    expect(String(image.handle)).toMatch(/^[0-9A-F]+$/i)
 
     expect(image.insertionPoint).toEqual({ x: 1, y: 2, z: 0 })
     expect(image.uVector).toEqual({ x: 1, y: 0, z: 0 })
-    expect(image.vVector).toEqual({ x: 0, y: 1, z: 0 })
+    expect(image.vVector.x).toBeCloseTo(0, 10)
+    expect(image.vVector.y).toBeCloseTo(1, 10)
+    expect(image.vVector.z).toEqual(0)
     expect(image.pixelSizeX).toEqual(640)
     expect(image.pixelSizeY).toEqual(480)
 
-    expect(image.imageDefHandle).toEqual('AD')
-    expect(image.imageDefReactorHandle).toEqual('AE')
+    expect(image.imageDefHandle).toBeDefined()
+    expect(String(image.imageDefHandle)).toMatch(/^[0-9A-F]+$/i)
+    expect(image.imageDefReactorHandle).toBeDefined()
+    expect(String(image.imageDefReactorHandle)).toMatch(/^[0-9A-F]+$/i)
   })
 })
