@@ -1,0 +1,31 @@
+import { getResourcePath } from './test-helpers.ts'
+import fs from 'fs'
+import expectModule from 'expect'
+const expect = expectModule.expect || expectModule.default
+
+import { parseString } from '../../src'
+const dxfContents = fs.readFileSync(
+  getResourcePath(import.meta.url, 'lines.dxf'),
+  'utf-8',
+)
+
+describe('header', () => {
+  it('can parse the header', () => {
+    const parsed = parseString(dxfContents)
+    expect(parsed.header).toEqual({
+      measurement: 1,
+      insUnits: 4,
+      extMin: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      extMax: {
+        x: 100,
+        y: 99.2820323027551,
+        z: 0,
+      },
+      dimArrowSize: 2.5,
+    })
+  })
+})
