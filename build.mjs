@@ -67,6 +67,11 @@ async function build() {
     target: 'es2020',
     sourcemap: true,
     outExtension: { '.js': '.cjs' },
+    // CJS output does not support import.meta; this prevents warnings for code
+    // that uses import.meta.url only as an ESM fallback.
+    define: {
+      'import.meta.url': '__filename',
+    },
     logLevel: 'info',
   })
 
