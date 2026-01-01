@@ -3,7 +3,7 @@ import fs from 'node:fs'
 import { getResourcePath } from './test-helpers.js'
 const expect = expectModule.expect || expectModule.default
 
-import { parseString, toSVG } from '../../src'
+import { parseString, toPolylines, toSVG } from '../../src'
 
 describe('LEADER', () => {
   it('parses LEADER entity and renders basic SVG path', () => {
@@ -27,5 +27,13 @@ describe('LEADER', () => {
 
     const svg = toSVG(parsed)
     expect(svg).toContain('<path')
+
+    const polylinesResult = toPolylines(parsed)
+    expect(polylinesResult.polylines.length).toEqual(1)
+    expect(polylinesResult.polylines[0].vertices).toEqual([
+      [0, 0],
+      [100, 0],
+      [100, 50],
+    ])
   })
 })

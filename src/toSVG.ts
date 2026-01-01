@@ -20,6 +20,7 @@ import type {
   LeaderEntity,
   MTextEntity,
   ParsedDXF,
+  ShapeEntity,
   SplineEntity,
   TextEntity,
   ToleranceEntity,
@@ -403,6 +404,32 @@ const tolerance = (entity: ToleranceEntity): BoundsAndElement => {
 }
 
 /**
+ * Minimal <text /> fallback for SHAPE entities.
+ * Rendering SHX-based shapes is out of scope; we render the name as text.
+ */
+const shape = (entity: ShapeEntity): BoundsAndElement => {
+  const x = entity.insertionPoint?.x ?? 0
+  const y = entity.insertionPoint?.y ?? 0
+  const height = entity.size ?? 1
+  const rotation = entity.rotation ?? 0
+  const content = entity.name ?? ''
+
+  const textWidth = content.length * height * 0.6
+  const bbox0 = new Box2()
+    .expandByPoint({ x, y })
+    .expandByPoint({ x: x + textWidth, y: y + height })
+
+  const rotationDegrees = (rotation * 180) / Math.PI
+  const element0 = `<text x="${x}" y="${y}" font-size="${height}" transform="rotate(${-rotationDegrees} ${x} ${y}) scale(1,-1) translate(0 ${-2 * y})">${escapeXmlText(content)}</text>`
+
+  const { bbox, element } = addFlipXIfApplicable(entity, {
+    bbox: bbox0,
+    element: element0,
+  })
+  return transformBoundingBoxAndElement(bbox, element, entity.transforms ?? [])
+}
+
+/**
  * Create dimension visualization with DIMSTYLE support
  */
 const dimension = (
@@ -504,17 +531,29 @@ const entityToBoundsAndElement = (
       }
     }
     case 'LINE':
+    case 'RAY':
+    case 'XLINE':
     case 'POLYLINE': {
+      return polyline(entity)
+    }
+    case 'SOLID':
+    case 'TRACE': {
       return polyline(entity)
     }
     case 'LWPOLYLINE': {
       return lwpolyline(entity)
+    }
+    case 'WIPEOUT': {
+      return polyline(entity)
     }
     case 'LEADER': {
       return leader(entity as LeaderEntity)
     }
     case 'TOLERANCE': {
       return tolerance(entity as ToleranceEntity)
+    }
+    case 'SHAPE': {
+      return shape(entity as ShapeEntity)
     }
     default:
       logger.warn('entity type not supported in SVG rendering:', entity.type)
@@ -569,9 +608,12 @@ export default function toSVG(parsed: ParsedDXF, options: ToSVGOptions = {}): st
           acc.bbox.expandByPoint(bbox.min)
           acc.bbox.expandByPoint(bbox.max)
         }
-        acc.elements.push(
-          `<g stroke="${rgbToColorAttribute(rgb)}">${element}</g>`,
-        )
+        const color = rgbToColorAttribute(rgb)
+        if (entity.type === 'SOLID' || entity.type === 'TRACE') {
+          acc.elements.push(`<g fill="${color}" stroke="none">${element}</g>`)
+        } else {
+          acc.elements.push(`<g stroke="${color}">${element}</g>`)
+        }
       }
       return acc
     },
