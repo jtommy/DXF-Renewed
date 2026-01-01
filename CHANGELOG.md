@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## 7.1.0 (2026-01-01)
+
+* Merge pull request #1 from linkiez/feat/seqend-sequencing ([068c6e1](https://github.com/linkiez/DXF-Renewed/commit/068c6e1)), closes [#1](https://github.com/linkiez/DXF-Renewed/issues/1)
+* docs: add ezdxf reference sitemap and dev instructions ([859da63](https://github.com/linkiez/DXF-Renewed/commit/859da63))
+* docs: add SVG rendering integration testing docs ([5bb0dbb](https://github.com/linkiez/DXF-Renewed/commit/5bb0dbb))
+* docs: clarify type safety guidance ([dc01286](https://github.com/linkiez/DXF-Renewed/commit/dc01286))
+* docs: consolidate documentation and plan ([2f4f01e](https://github.com/linkiez/DXF-Renewed/commit/2f4f01e))
+* docs: switch to main-only workflow ([6098ad6](https://github.com/linkiez/DXF-Renewed/commit/6098ad6))
+* docs: update dimension docs and test guidance ([c171703](https://github.com/linkiez/DXF-Renewed/commit/c171703))
+* chore: ignore local ezdxf venv ([053e4c4](https://github.com/linkiez/DXF-Renewed/commit/053e4c4))
+* chore(fixtures): add ezdxf validation tooling ([c81c871](https://github.com/linkiez/DXF-Renewed/commit/c81c871))
+* chore(fixtures): regenerate DXF fixtures via ezdxf ([7c6876d](https://github.com/linkiez/DXF-Renewed/commit/7c6876d))
+* chore(tests): track rendered screenshots ([ebcd1f1](https://github.com/linkiez/DXF-Renewed/commit/ebcd1f1))
+* test(dimension): add fixtures for all dimension types ([6b5f9cf](https://github.com/linkiez/DXF-Renewed/commit/6b5f9cf))
+* test(integration): add node DIMENSION SVG rendering test ([820efc6](https://github.com/linkiez/DXF-Renewed/commit/820efc6))
+* test(integration): run SVG rendering tests in browser ([b0abe31](https://github.com/linkiez/DXF-Renewed/commit/b0abe31))
+* feat(dimension): add angular 3-point rendering ([a9ee537](https://github.com/linkiez/DXF-Renewed/commit/a9ee537))
+* feat(entities): add image, underlay, leader, and tolerance support ([7f17e47](https://github.com/linkiez/DXF-Renewed/commit/7f17e47))
+* feat(objects): add handle maps for common DXF objects ([7672211](https://github.com/linkiez/DXF-Renewed/commit/7672211))
+* style: normalize import ordering ([55d54c1](https://github.com/linkiez/DXF-Renewed/commit/55d54c1))
+* fix(denormalise): apply block basepoint to TEXT/MTEXT/DIMENSION ([1ee560e](https://github.com/linkiez/DXF-Renewed/commit/1ee560e))
+* fix(parser): harden POLYLINE sequencing ([7eb1fb7](https://github.com/linkiez/DXF-Renewed/commit/7eb1fb7))
+
 ## 7.0.0 (2025-12-31)
 
 * fix: consolidar tipos ParsedDXF e corrigir incompatibilidades ([804c485](https://github.com/linkiez/DXF-Renewed/commit/804c485))
