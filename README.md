@@ -30,9 +30,9 @@ Written in **TypeScript** with full type definitions included. Uses modern ES201
 
 ## Supported Entities
 
-All major geometric entities are **parsed and rendered to SVG**:
+Many common DXF entities are **parsed and rendered to SVG**. Some entities are parsed but currently skipped during SVG rendering.
 
-### Fully Supported
+### Rendered to SVG
 
 - ✅ **LINE** - Straight line segments
 - ✅ **CIRCLE** - Native SVG `<circle />` element
@@ -44,16 +44,23 @@ All major geometric entities are **parsed and rendered to SVG**:
 - ✅ **TEXT** - Single-line text with rotation
 - ✅ **MTEXT** - Multi-line text with formatting
 - ✅ **DIMENSION** - Linear, aligned, radial, diameter, and ordinate dimensions
-- ✅ **INSERT** - Block references with transformations
-- ✅ **POINT** - Point entities
 - ✅ **SOLID** - Solid-filled triangles and quadrilaterals
-- ✅ **3DFACE** - 3D face entities
+- ✅ **TRACE** - Rendered as a filled path outline
+- ✅ **RAY/XLINE** - Rendered as polylines
+- ✅ **WIPEOUT** - Rendered as outline fallback
+- ✅ **LEADER** - Rendered as an SVG path (basic)
+- ✅ **TOLERANCE** - Rendered with SVG text fallback
+- ✅ **SHAPE** - Rendered with SVG text fallback
+
+> **INSERT note:** INSERT is supported via denormalisation. The library expands INSERT entities into their referenced BLOCK contents and then renders the resulting entities with transforms applied.
 
 ### Parsed (Not Rendered)
 
-- ⚠️ **HATCH** - Parsed but not rendered to SVG
-- ⚠️ **STYLE** - Text styles parsed (colors supported, fonts not applied)
+- ⚠️ **POINT** - Parsed but currently not rendered to SVG
+- ⚠️ **3DFACE** - Parsed but currently not rendered to SVG
+- ⚠️ **HATCH** - Parsed but currently not rendered to SVG
 - ⚠️ **ATTDEF/ATTRIB** - Block attributes parsed
+- ⚠️ **Text styles (STYLE table)** - Parsed (colors supported; fonts are not applied to SVG)
 
 ## Getting started
 
