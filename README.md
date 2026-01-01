@@ -11,6 +11,39 @@ Written in **TypeScript** with full type definitions included. Uses modern ES201
 
 > **Note:** This is a renewed and modernized fork of the original [dxf](https://github.com/skymakerolof/dxf) library, with complete TypeScript migration, enhanced performance, and additional features.
 
+## TL;DR
+
+- Parse: `parseString(dxfText)` → typed `ParsedDXF`
+- Expand blocks: `denormalise(parsed)` → flat `Entity[]` with transforms
+- Render/export:
+  - `toSVG(parsed)` → SVG string
+  - `toPolylines(parsed)` → numeric polyline arrays
+  - `toJson(parsed)` → JSON string
+
+## Features
+
+- TypeScript-first public API (strict typing)
+- Deterministic parsing + regression coverage via real DXF fixtures
+- INSERT/BLOCK expansion (denormalisation) with transform stacking
+- SVG rendering for common 2D geometry + annotation entities
+- Polyline output for custom renderers (Canvas/WebGL/etc.)
+- Framework-agnostic (no React/Webpack required)
+
+## Documentation
+
+- Project roadmap and progress: [ROADMAP.md](./ROADMAP.md)
+- Architecture overview: [ARCHITECTURE.md](./ARCHITECTURE.md)
+
+## Table of Contents
+
+- [Version History](#version-history)
+- [Supported Entities](#supported-entities)
+- [Getting started](#getting-started)
+- [API](#api)
+- [Running the Examples](#running-the-examples)
+- [Tests](#tests)
+- [Build System](#build-system)
+
 ## Version History
 
 **Version 2.0** - Complete rewrite from SAX-style parsing to handle nested references properly (inserts, blocks, etc.)
@@ -30,9 +63,9 @@ Written in **TypeScript** with full type definitions included. Uses modern ES201
 
 ## Supported Entities
 
-All major geometric entities are **parsed and rendered to SVG**:
+Many common DXF entities are **parsed and rendered to SVG**. Some entities are parsed but currently skipped during SVG rendering.
 
-### Fully Supported
+### Rendered to SVG
 
 - ✅ **LINE** - Straight line segments
 - ✅ **CIRCLE** - Native SVG `<circle />` element
@@ -44,16 +77,23 @@ All major geometric entities are **parsed and rendered to SVG**:
 - ✅ **TEXT** - Single-line text with rotation
 - ✅ **MTEXT** - Multi-line text with formatting
 - ✅ **DIMENSION** - Linear, aligned, radial, diameter, and ordinate dimensions
-- ✅ **INSERT** - Block references with transformations
-- ✅ **POINT** - Point entities
 - ✅ **SOLID** - Solid-filled triangles and quadrilaterals
-- ✅ **3DFACE** - 3D face entities
+- ✅ **TRACE** - Rendered as a filled path outline
+- ✅ **RAY/XLINE** - Rendered as polylines
+- ✅ **WIPEOUT** - Rendered as outline fallback
+- ✅ **LEADER** - Rendered as an SVG path (basic)
+- ✅ **TOLERANCE** - Rendered with SVG text fallback
+- ✅ **SHAPE** - Rendered with SVG text fallback
+
+> **INSERT note:** INSERT is supported via denormalisation. The library expands INSERT entities into their referenced BLOCK contents and then renders the resulting entities with transforms applied.
 
 ### Parsed (Not Rendered)
 
-- ⚠️ **HATCH** - Parsed but not rendered to SVG
-- ⚠️ **STYLE** - Text styles parsed (colors supported, fonts not applied)
+- ⚠️ **POINT** - Parsed but currently not rendered to SVG
+- ⚠️ **3DFACE** - Parsed but currently not rendered to SVG
+- ⚠️ **HATCH** - Parsed but currently not rendered to SVG
 - ⚠️ **ATTDEF/ATTRIB** - Block attributes parsed
+- ⚠️ **Text styles (STYLE table)** - Parsed (colors supported; fonts are not applied to SVG)
 
 ## Getting started
 
@@ -75,6 +115,9 @@ console.log('svg:', helper.toSVG())
 
 // Create polylines (e.g. to render in WebGL)
 console.log('polylines:', helper.toPolylines())
+
+// Create a JSON representation (1-to-1 with the parsed model)
+console.log('json:', helper.toJson({ pretty: true }))
 ```
 
 JavaScript example:
@@ -95,7 +138,27 @@ console.log('svg:', helper.toSVG())
 
 // Create polylines (e.g. to render in WebGL)
 console.log('polylines:', helper.toPolylines())
+
+// Create a JSON representation (1-to-1 with the parsed model)
+console.log('json:', helper.toJson({ pretty: true }))
 ```
+
+## API
+
+The public API is exported from `src/index.ts`.
+
+- `parseString(dxfText: string): ParsedDXF`
+  - Parse DXF text into a typed model.
+- `denormalise(parsed: ParsedDXF): Entity[]`
+  - Expand `INSERT` entities into their referenced `BLOCK` contents.
+- `toSVG(parsed: ParsedDXF, options?): string`
+  - Render the drawing to an SVG string.
+- `toPolylines(parsed: ParsedDXF, options?): any[]`
+  - Convert supported entities to polyline arrays.
+- `toJson(parsed: ParsedDXF, options?): string`
+  - Serialize the parsed model as JSON.
+- `Helper`
+  - Convenience wrapper that exposes `parsed`, `denormalised`, plus `toSVG()`, `toPolylines()`, and `toJson()`.
 
 ## Running the Examples
 
@@ -231,11 +294,11 @@ Running the functional tests in a browser:
 yarn test:functional
 ```
 
-Please open `toSVG.html` when the file listing loads in the browser (or open `http://localhost:8030/toSVG.html#/`).
+This starts a Vite dev server and opens `http://localhost:8030/toSVG.html`.
 
 ## Development Guidelines
 
-Project documentation index: `docs/README.md`
+Project documentation index: `ROADMAP.md` (see “Documentation (Consolidated)”).
 
 ## TypeScript Support
 
@@ -287,7 +350,6 @@ This project uses [semantic-release](https://semantic-release.gitbook.io/) for a
 **Releases are automatically created** when commits following [Conventional Commits](https://www.conventionalcommits.org/en/) are pushed to:
 
 - `main` - Stable production releases (`1.0.0`, `1.1.0`, `2.0.0`)
-
 
 ### Commit Format
 

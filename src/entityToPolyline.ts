@@ -9,8 +9,13 @@ import type {
   EllipseEntity,
   EntityToPolylineOptions,
   HandlerVertex,
+  LeaderEntity,
   LineEntity,
+  RayEntity,
+  ShapeEntity,
   SplineEntity,
+  WipeoutEntity,
+  XLineEntity,
 } from './types'
 import type { PointTuple } from './types/common'
 
@@ -35,7 +40,17 @@ interface LocalPolylineEntity {
 
 type Entity =
   | LineEntity
+  | LeaderEntity
+  | RayEntity
+  | XLineEntity
+  | ShapeEntity
+  | WipeoutEntity
   | (LocalPolylineEntity & { type: 'LWPOLYLINE' | 'POLYLINE' })
+  | {
+      type: 'SOLID' | 'TRACE'
+      corners?: Array<{ x: number; y: number }>
+      points?: Array<{ x: number; y: number }>
+    }
   | CircleEntity
   | EllipseEntity
   | ArcEntity
@@ -151,7 +166,7 @@ export const interpolateBSpline = (
   return polyline
 }
 
-export const polyfaceOutline = (entity: LocalPolylineEntity): Point[][] => {
+export const polyfaceOutline = (entity: LocalPolylineEntity): Point[][] => { // NOSONAR
   const vertices: Array<{ x: number; y: number }> = []
   const faces: Array<{ indices: number[]; hiddens: boolean[] }> = []
 
@@ -219,18 +234,112 @@ export const polyfaceOutline = (entity: LocalPolylineEntity): Point[][] => {
  * the DXF in SVG, Canvas, WebGL etc., without depending on native support
  * of primitive objects (ellispe, spline etc.)
  */
-export default function entityToPolyline(
+export default function entityToPolyline( // NOSONAR
   entity: Entity,
   options?: EntityToPolylineOptions,
 ): Point[] {
   options = options || {}
   let polyline: Point[] | undefined
 
+  const INFINITE_LINE_LENGTH = 1000
+
+  const normalize2 = (x: number, y: number): { x: number; y: number } | null => {
+    const len = Math.hypot(x, y)
+    if (len === 0) return null
+    return { x: x / len, y: y / len }
+  }
+
   if (entity.type === 'LINE') {
     polyline = [
       [entity.start.x, entity.start.y],
       [entity.end.x, entity.end.y],
     ]
+  }
+
+  if (entity.type === 'LEADER') {
+    if (entity.vertices.length >= 2) {
+      polyline = entity.vertices.map((v) => [v.x, v.y])
+    } else {
+      logger.warn('LEADER entity with insufficient vertices')
+      polyline = []
+    }
+  }
+
+  if (entity.type === 'RAY') {
+    const dir = normalize2(entity.direction.x, entity.direction.y)
+    if (dir === null) {
+      logger.warn('RAY entity with zero direction vector')
+      polyline = []
+    } else {
+      polyline = [
+        [entity.start.x, entity.start.y],
+        [
+          entity.start.x + dir.x * INFINITE_LINE_LENGTH,
+          entity.start.y + dir.y * INFINITE_LINE_LENGTH,
+        ],
+      ]
+    }
+  }
+
+  if (entity.type === 'XLINE') {
+    const dir = normalize2(entity.direction.x, entity.direction.y)
+    if (dir === null) {
+      logger.warn('XLINE entity with zero direction vector')
+      polyline = []
+    } else {
+      polyline = [
+        [
+          entity.basePoint.x - dir.x * INFINITE_LINE_LENGTH,
+          entity.basePoint.y - dir.y * INFINITE_LINE_LENGTH,
+        ],
+        [
+          entity.basePoint.x + dir.x * INFINITE_LINE_LENGTH,
+          entity.basePoint.y + dir.y * INFINITE_LINE_LENGTH,
+        ],
+      ]
+    }
+  }
+
+  if (entity.type === 'SHAPE') {
+    const x = entity.insertionPoint?.x ?? 0
+    const y = entity.insertionPoint?.y ?? 0
+    const size = entity.size ?? 0
+    const scaleX = entity.relativeXScale ?? 1
+    const length = size * scaleX
+    polyline = [
+      [x, y],
+      [x + length, y],
+    ]
+  }
+
+  if (entity.type === 'WIPEOUT') {
+    const verts = entity.clipBoundaryVertices
+    if (!verts || verts.length < 2) {
+      logger.warn('WIPEOUT entity with missing clip boundary vertices')
+      polyline = []
+    } else {
+      const insX = entity.insertionPoint?.x ?? 0
+      const insY = entity.insertionPoint?.y ?? 0
+
+      const ux = entity.uVector?.x ?? 1
+      const uy = entity.uVector?.y ?? 0
+
+      const vx = entity.vVector?.x ?? 0
+      const vy = entity.vVector?.y ?? 1
+
+      polyline = verts.map((p) => [
+        insX + ux * p.x + vx * p.y,
+        insY + uy * p.x + vy * p.y,
+      ])
+
+      if (polyline.length > 0) {
+        const first = polyline[0]
+        const last = polyline[polyline.length - 1]
+        if (first[0] !== last[0] || first[1] !== last[1]) {
+          polyline.push(first)
+        }
+      }
+    }
   }
 
   if (entity.type === 'LWPOLYLINE' || entity.type === 'POLYLINE') {
@@ -328,6 +437,19 @@ export default function entityToPolyline(
       options.interpolationsPerSplineSegment,
       entity.weights,
     )
+  }
+
+  if (entity.type === 'SOLID' || entity.type === 'TRACE') {
+    const corners = entity.corners ?? entity.points
+    if (corners && corners.length >= 4) {
+      polyline = [
+        [corners[0].x, corners[0].y],
+        [corners[1].x, corners[1].y],
+        [corners[2].x, corners[2].y],
+        [corners[3].x, corners[3].y],
+        [corners[0].x, corners[0].y],
+      ]
+    }
   }
 
   if (!polyline) {

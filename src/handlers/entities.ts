@@ -10,7 +10,6 @@ import circle from './entity/circle'
 import dgnUnderlay from './entity/dgnUnderlay'
 import dimension from './entity/dimension'
 import dwfUnderlay from './entity/dwfUnderlay'
-import pdfUnderlay from './entity/pdfUnderlay'
 import ellipse from './entity/ellipse'
 import hatch from './entity/hatch'
 import image from './entity/image'
@@ -18,17 +17,28 @@ import insert from './entity/insert'
 import leader from './entity/leader'
 import line from './entity/line'
 import lwpolyline from './entity/lwpolyline'
+import mleader from './entity/mleader'
+import mline from './entity/mline'
 import mtext from './entity/mtext'
 import ole2Frame from './entity/ole2Frame'
+import oleFrame from './entity/oleframe'
+import pdfUnderlay from './entity/pdfUnderlay'
 import point from './entity/point'
 import polyline from './entity/polyline'
+import ray from './entity/ray'
+import region from './entity/region'
+import shape from './entity/shape'
 import solid from './entity/solid'
 import spline from './entity/spline'
+import table from './entity/table'
 import text from './entity/text'
 import threeDFace from './entity/threeDFace'
 import tolerance from './entity/tolerance'
+import trace from './entity/trace'
 import vertex from './entity/vertex'
 import viewport from './entity/viewport'
+import wipeout from './entity/wipeout'
+import xline from './entity/xline'
 
 interface EntityHandler {
   TYPE: string
@@ -39,19 +49,26 @@ const handlers: Record<string, EntityHandler> = [
   point,
   line,
   lwpolyline,
+  mline,
+  mleader,
   polyline,
   vertex,
   circle,
   arc,
   ellipse,
   spline,
+  table,
   solid,
+  trace,
   hatch,
   image,
   leader,
+  ray,
+  region,
   dwfUnderlay,
   dgnUnderlay,
   pdfUnderlay,
+  shape,
   mtext,
   tolerance,
   attdef,
@@ -62,6 +79,9 @@ const handlers: Record<string, EntityHandler> = [
   threeDFace,
   viewport,
   ole2Frame,
+  oleFrame,
+  xline,
+  wipeout,
 ].reduce((acc, mod) => {
   acc[mod.TYPE] = mod
   return acc
