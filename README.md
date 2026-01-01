@@ -11,6 +11,39 @@ Written in **TypeScript** with full type definitions included. Uses modern ES201
 
 > **Note:** This is a renewed and modernized fork of the original [dxf](https://github.com/skymakerolof/dxf) library, with complete TypeScript migration, enhanced performance, and additional features.
 
+## TL;DR
+
+- Parse: `parseString(dxfText)` → typed `ParsedDXF`
+- Expand blocks: `denormalise(parsed)` → flat `Entity[]` with transforms
+- Render/export:
+  - `toSVG(parsed)` → SVG string
+  - `toPolylines(parsed)` → numeric polyline arrays
+  - `toJson(parsed)` → JSON string
+
+## Features
+
+- TypeScript-first public API (strict typing)
+- Deterministic parsing + regression coverage via real DXF fixtures
+- INSERT/BLOCK expansion (denormalisation) with transform stacking
+- SVG rendering for common 2D geometry + annotation entities
+- Polyline output for custom renderers (Canvas/WebGL/etc.)
+- Framework-agnostic (no React/Webpack required)
+
+## Documentation
+
+- Project roadmap and progress: [ROADMAP.md](./ROADMAP.md)
+- Architecture overview: [ARCHITECTURE.md](./ARCHITECTURE.md)
+
+## Table of Contents
+
+- [Version History](#version-history)
+- [Supported Entities](#supported-entities)
+- [Getting started](#getting-started)
+- [API](#api)
+- [Running the Examples](#running-the-examples)
+- [Tests](#tests)
+- [Build System](#build-system)
+
 ## Version History
 
 **Version 2.0** - Complete rewrite from SAX-style parsing to handle nested references properly (inserts, blocks, etc.)
@@ -109,6 +142,23 @@ console.log('polylines:', helper.toPolylines())
 // Create a JSON representation (1-to-1 with the parsed model)
 console.log('json:', helper.toJson({ pretty: true }))
 ```
+
+## API
+
+The public API is exported from `src/index.ts`.
+
+- `parseString(dxfText: string): ParsedDXF`
+  - Parse DXF text into a typed model.
+- `denormalise(parsed: ParsedDXF): Entity[]`
+  - Expand `INSERT` entities into their referenced `BLOCK` contents.
+- `toSVG(parsed: ParsedDXF, options?): string`
+  - Render the drawing to an SVG string.
+- `toPolylines(parsed: ParsedDXF, options?): any[]`
+  - Convert supported entities to polyline arrays.
+- `toJson(parsed: ParsedDXF, options?): string`
+  - Serialize the parsed model as JSON.
+- `Helper`
+  - Convenience wrapper that exposes `parsed`, `denormalised`, plus `toSVG()`, `toPolylines()`, and `toJson()`.
 
 ## Running the Examples
 
