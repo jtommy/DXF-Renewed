@@ -1,9 +1,8 @@
 # DXF-Renewed
 
-[![Build Status](https://travis-ci.org/bjnortier/dxf.svg?branch=master)](https://travis-ci.org/bjnortier/dxf)
 [![semantic-release: conventionalcommits](https://img.shields.io/badge/semantic--release-conventionalcommits-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
 
-> **⚠️ WARNING: This repository is currently under development and has not been fully tested in production. Use at your own risk.**
+> **Note:** This is a modernized fork under active development. The core parsing and rendering features are stable, with ongoing work to expand 2D entity coverage. See [ROADMAP.md](./ROADMAP.md) for current progress.
 
 DXF parser for node/browser.
 
@@ -29,6 +28,22 @@ Written in **TypeScript** with full type definitions included. Uses modern ES201
 - Polyline output for custom renderers (Canvas/WebGL/etc.)
 - Framework-agnostic (no React/Webpack required)
 
+## Development Progress
+
+This project follows a phased migration plan to align with AutoCAD 2024 DXF specifications and achieve complete 2D coverage.
+
+**Current Status (as of 2026-01-01):**
+- ✅ M0 — Baseline & Regression Harness: **Complete**
+- 🔄 M1 — DXF Format & Section-Level Compliance: **Ongoing**
+- 🔄 M2 — TABLES Coverage (2D-Relevant): **In Progress**
+- 🔄 M3 — OBJECTS Coverage (2D-Relevant): **In Progress**
+- 🔄 M4 — ENTITIES: Complete 2D Set: **Ongoing**
+- 🔄 M5 — Rendering Parity (toPolylines / toSVG): **Ongoing**
+
+For detailed progress, implementation roadmap, and architecture documentation, see:
+- [ROADMAP.md](./ROADMAP.md) - Full migration plan and progress tracking
+- [ARCHITECTURE.md](./ARCHITECTURE.md) - Architecture overview
+
 ## Documentation
 
 - Project roadmap and progress: [ROADMAP.md](./ROADMAP.md)
@@ -52,7 +67,7 @@ Written in **TypeScript** with full type definitions included. Uses modern ES201
 
 **Version 4.x** - Native SVG elements where possible (`<circle />`, `<ellipse />`, etc.)
 
-**Version 5.x (Current)** - Complete TypeScript migration:
+**Version 5.x** - Complete TypeScript migration:
 
 - 🎯 Full TypeScript codebase with strict type checking
 - ⚡ Built with esbuild (96% faster than Babel - 18ms vs 447ms)
@@ -60,6 +75,31 @@ Written in **TypeScript** with full type definitions included. Uses modern ES201
 - ✅ Extensive unit tests and browser integration tests
 - 🎨 Enhanced SVG rendering with TEXT, MTEXT, and DIMENSION support
 - 📚 Comprehensive type definitions for all DXF entities
+
+**Version 7.0.0** - Semantic versioning and project modernization:
+
+- 🔄 Implemented semantic-release for automated versioning
+- 🌍 Complete migration to English (en_US) codebase
+- 🎨 Advanced DIMENSION rendering with arrows and extension lines
+- 📝 Consolidated type system and eliminated duplicate interfaces
+- 🔧 TypeScript ESLint support
+
+**Version 7.1.0** - Entity coverage expansion:
+
+- 🐛 Hardened POLYLINE/VERTEX/SEQEND sequencing
+- 🎯 Fixed block basepoint handling for TEXT/MTEXT/DIMENSION entities
+- 🖼️ Added IMAGE, UNDERLAY, LEADER, and TOLERANCE entity support
+- 🧪 Browser-based SVG rendering integration tests with Playwright
+- 📊 Enhanced DIMENSION support for angular 3-point rendering
+
+**Version 7.2.x (Current)** - Complete 2D coverage initiative:
+
+- 🎨 Added rendering support for RAY, XLINE, TRACE, SHAPE, WIPEOUT, and LEADER entities
+- 📦 Implemented toJson export functionality
+- 🗂️ Added FIELD, DIMASSOC objects and additional table types
+- 🔧 Migrated functional tests to Vite (removed Babel/React/Webpack)
+- 📚 Consolidated documentation into ROADMAP.md and ARCHITECTURE.md
+- 🏗️ Aligned with AutoCAD 2024 DXF specifications
 
 ## Supported Entities
 
@@ -79,9 +119,10 @@ Many common DXF entities are **parsed and rendered to SVG**. Some entities are p
 - ✅ **DIMENSION** - Linear, aligned, radial, diameter, and ordinate dimensions
 - ✅ **SOLID** - Solid-filled triangles and quadrilaterals
 - ✅ **TRACE** - Rendered as a filled path outline
-- ✅ **RAY/XLINE** - Rendered as polylines
-- ✅ **WIPEOUT** - Rendered as outline fallback
-- ✅ **LEADER** - Rendered as an SVG path (basic)
+- ✅ **RAY** - Rendered as polylines (finite fallback)
+- ✅ **XLINE** - Rendered as polylines (finite fallback)
+- ✅ **WIPEOUT** - Rendered as outline fallback (masking not yet implemented)
+- ✅ **LEADER** - Rendered as an SVG path
 - ✅ **TOLERANCE** - Rendered with SVG text fallback
 - ✅ **SHAPE** - Rendered with SVG text fallback
 
@@ -92,8 +133,14 @@ Many common DXF entities are **parsed and rendered to SVG**. Some entities are p
 - ⚠️ **POINT** - Parsed but currently not rendered to SVG
 - ⚠️ **3DFACE** - Parsed but currently not rendered to SVG
 - ⚠️ **HATCH** - Parsed but currently not rendered to SVG
-- ⚠️ **ATTDEF/ATTRIB** - Block attributes parsed
-- ⚠️ **Text styles (STYLE table)** - Parsed (colors supported; fonts are not applied to SVG)
+- ⚠️ **ATTDEF/ATTRIB** - Block attributes parsed but not rendered
+- ⚠️ **MLEADER** - Parsed but not rendered to SVG
+- ⚠️ **OLEFRAME** - Parsed but not rendered to SVG
+- ⚠️ **REGION** - Parsed but not rendered to SVG
+- ⚠️ **TABLE** - Parsed but not rendered to SVG
+- ⚠️ **MLINE** - Parsed but not rendered to SVG
+
+> **Note:** Text styles (STYLE table) are parsed. Colors are supported; fonts are not applied to SVG.
 
 ## Getting started
 
