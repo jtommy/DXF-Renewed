@@ -67,7 +67,7 @@ For detailed progress, implementation roadmap, and architecture documentation, s
 
 **Version 4.x** - Native SVG elements where possible (`<circle />`, `<ellipse />`, etc.)
 
-**Version 5.x (Current)** - Complete TypeScript migration:
+**Version 5.x** - Complete TypeScript migration:
 
 - 🎯 Full TypeScript codebase with strict type checking
 - ⚡ Built with esbuild (96% faster than Babel - 18ms vs 447ms)
@@ -75,6 +75,31 @@ For detailed progress, implementation roadmap, and architecture documentation, s
 - ✅ Extensive unit tests and browser integration tests
 - 🎨 Enhanced SVG rendering with TEXT, MTEXT, and DIMENSION support
 - 📚 Comprehensive type definitions for all DXF entities
+
+**Version 7.0.0** - Semantic versioning and project modernization:
+
+- 🔄 Implemented semantic-release for automated versioning
+- 🌍 Complete migration to English (en_US) codebase
+- 🎨 Advanced DIMENSION rendering with arrows and extension lines
+- 📝 Consolidated type system and eliminated duplicate interfaces
+- 🔧 TypeScript ESLint support
+
+**Version 7.1.0** - Entity coverage expansion:
+
+- 🐛 Hardened POLYLINE/VERTEX/SEQEND sequencing
+- 🎯 Fixed block basepoint handling for TEXT/MTEXT/DIMENSION entities
+- 🖼️ Added IMAGE, UNDERLAY, LEADER, and TOLERANCE entity support
+- 🧪 Browser-based SVG rendering integration tests with Playwright
+- 📊 Enhanced DIMENSION support for angular 3-point rendering
+
+**Version 7.2.x (Current)** - Complete 2D coverage initiative:
+
+- 🎨 Added rendering support for RAY, XLINE, TRACE, SHAPE, WIPEOUT, and LEADER entities
+- 📦 Implemented toJson export functionality
+- 🗂️ Added FIELD, DIMASSOC objects and additional table types
+- 🔧 Migrated functional tests to Vite (removed Babel/React/Webpack)
+- 📚 Consolidated documentation into ROADMAP.md and ARCHITECTURE.md
+- 🏗️ Aligned with AutoCAD 2024 DXF specifications
 
 ## Supported Entities
 
