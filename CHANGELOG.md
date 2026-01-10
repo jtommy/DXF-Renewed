@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## <small>7.2.5 (2026-01-10)</small>
+
+* Initial plan ([d15ffdc](https://github.com/linkiez/DXF-Renewed/commit/d15ffdc))
+* Merge pull request #6 from linkiez/copilot/update-readme-information ([169c640](https://github.com/linkiez/DXF-Renewed/commit/169c640)), closes [#6](https://github.com/linkiez/DXF-Renewed/issues/6)
+* docs: add version 7.x history to README ([456a38a](https://github.com/linkiez/DXF-Renewed/commit/456a38a))
+* docs: update README.md with current project status and entity support ([956ee41](https://github.com/linkiez/DXF-Renewed/commit/956ee41))
+
 ## <small>7.2.4 (2026-01-01)</small>
 
 * Merge pull request #5 from linkiez/fix/vecks-types ([cdff1cf](https://github.com/linkiez/DXF-Renewed/commit/cdff1cf)), closes [#5](https://github.com/linkiez/DXF-Renewed/issues/5)
