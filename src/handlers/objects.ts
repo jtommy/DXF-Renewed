@@ -318,7 +318,7 @@ function parseGroupObject(group: ObjectGroup): GroupObject | undefined {
     if (type === 5) groupObj.handle = value
     if (type === 330) groupObj.ownerHandle = value
     if (type === 300) groupObj.name = String(value)
-    if (type === 340) groupObj.entityHandles?.push(String(value))
+    if (type === 340) groupObj.entityHandles.push(String(value))
   }
 
   return groupObj
