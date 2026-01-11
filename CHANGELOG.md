@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## 7.3.0 (2026-01-11)
+
+* Initial plan ([3376d5b](https://github.com/linkiez/DXF-Renewed/commit/3376d5b))
+* Merge pull request #7 from linkiez/copilot/add-missing-table-support ([3aa64ca](https://github.com/linkiez/DXF-Renewed/commit/3aa64ca)), closes [#7](https://github.com/linkiez/DXF-Renewed/issues/7)
+* Merge pull request #8 from linkiez/revert-7-copilot/add-missing-table-support ([ac8eb36](https://github.com/linkiez/DXF-Renewed/commit/ac8eb36)), closes [#8](https://github.com/linkiez/DXF-Renewed/issues/8)
+* Revert "feat(objects): add TABLESTYLE and GROUP object parsing" ([47da71e](https://github.com/linkiez/DXF-Renewed/commit/47da71e))
+* Update src/handlers/objects.ts ([dc89046](https://github.com/linkiez/DXF-Renewed/commit/dc89046))
+* feat(objects): add TABLESTYLE and GROUP object parsing support ([9b88863](https://github.com/linkiez/DXF-Renewed/commit/9b88863))
+
 ## <small>7.2.5 (2026-01-10)</small>
 
 * Initial plan ([d15ffdc](https://github.com/linkiez/DXF-Renewed/commit/d15ffdc))
