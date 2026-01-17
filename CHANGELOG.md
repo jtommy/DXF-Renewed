@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## <small>7.3.1 (2026-01-17)</small>
+
+* Merge pull request #9 from jtommy/fix/export-types ([1ea0881](https://github.com/linkiez/DXF-Renewed/commit/1ea0881)), closes [#9](https://github.com/linkiez/DXF-Renewed/issues/9)
+* fix(types): add export all types to index ([8f49d3b](https://github.com/linkiez/DXF-Renewed/commit/8f49d3b))
+* fix(types): fix missing index ([4ef61f6](https://github.com/linkiez/DXF-Renewed/commit/4ef61f6))
+
 ## 7.3.0 (2026-01-11)
 
 * Initial plan ([3376d5b](https://github.com/linkiez/DXF-Renewed/commit/3376d5b))
